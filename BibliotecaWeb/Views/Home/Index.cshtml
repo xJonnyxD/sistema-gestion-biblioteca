@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <h1 class="display-5">Sistema de Gestión de Biblioteca</h1>
+    <p class="lead text-muted">Programación Web II (Frontend) &mdash; ASP.NET Core MVC</p>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Libros</h5>
+                <p class="card-text">Consulta y administra el catálogo de libros.</p>
+                <a class="btn btn-primary" asp-controller="Libros" asp-action="Index">Ir a Libros</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Autores</h5>
+                <p class="card-text">Administra los autores registrados.</p>
+                <a class="btn btn-primary" asp-controller="Autores" asp-action="Index">Ir a Autores</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Categorías</h5>
+                <p class="card-text">Clasifica los libros por categoría.</p>
+                <a class="btn btn-primary" asp-controller="Categorias" asp-action="Index">Ir a Categorías</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Usuarios</h5>
+                <p class="card-text">Administra los usuarios de la biblioteca.</p>
+                <a class="btn btn-primary" asp-controller="Usuarios" asp-action="Index">Ir a Usuarios</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Préstamos</h5>
+                <p class="card-text">Registra y controla los préstamos.</p>
+                <a class="btn btn-primary" asp-controller="Prestamos" asp-action="Index">Ir a Préstamos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Acerca de</h5>
+                <p class="card-text">Información general del proyecto.</p>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="AcercaDe">Ir a Acerca de</a>
+            </div>
+        </div>
+    </div>
+</div>

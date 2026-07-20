@@ -1,0 +1,51 @@
+@model IEnumerable<Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1 class="mb-3">Usuarios</h1>
+<p class="text-muted">Módulo para administrar los usuarios que pueden solicitar préstamos.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">
+        No hay usuarios registrados.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Carné</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.Carne</td>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Apellido</td>
+                    <td>@usuario.Correo</td>
+                    <td>
+                        @if (usuario.Activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactivo</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
