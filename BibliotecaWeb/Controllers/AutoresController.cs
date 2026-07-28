@@ -1,3 +1,4 @@
+using BibliotecaWeb.Data;
 using BibliotecaWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,55 +8,51 @@ public class AutoresController : Controller
 {
     public IActionResult Index()
     {
-        var autores = new List<Autor>
-        {
-            new Autor
-            {
-                Id = 1,
-                Nombre = "Gabriel",
-                Apellido = "García Márquez",
-                Nacionalidad = "Colombiana",
-                FechaNacimiento = new DateTime(1927, 3, 6),
-                Activo = false
-            },
-            new Autor
-            {
-                Id = 2,
-                Nombre = "Isabel",
-                Apellido = "Allende",
-                Nacionalidad = "Chilena",
-                FechaNacimiento = new DateTime(1942, 8, 2),
-                Activo = true
-            },
-            new Autor
-            {
-                Id = 3,
-                Nombre = "Mario",
-                Apellido = "Vargas Llosa",
-                Nacionalidad = "Peruana",
-                FechaNacimiento = new DateTime(1936, 3, 28),
-                Activo = true
-            },
-            new Autor
-            {
-                Id = 4,
-                Nombre = "Miguel",
-                Apellido = "de Cervantes",
-                Nacionalidad = "Española",
-                FechaNacimiento = new DateTime(1547, 9, 29),
-                Activo = false
-            },
-            new Autor
-            {
-                Id = 5,
-                Nombre = "Claribel",
-                Apellido = "Alegría",
-                Nacionalidad = "Salvadoreña",
-                FechaNacimiento = new DateTime(1924, 5, 12),
-                Activo = true
-            }
-        };
+        return View(AutorRepositorio.Listar());
+    }
 
-        return View(autores);
+    [HttpGet]
+    public IActionResult Editar(int id)
+    {
+        var autor = AutorRepositorio.Obtener(id);
+        if (autor is null)
+        {
+            return NotFound();
+        }
+
+        return View(autor);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Editar(Autor autor)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(autor);
+        }
+
+        AutorRepositorio.Actualizar(autor);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public IActionResult Eliminar(int id)
+    {
+        var autor = AutorRepositorio.Obtener(id);
+        if (autor is null)
+        {
+            return NotFound();
+        }
+
+        return View(autor);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult EliminarConfirmado(int id)
+    {
+        AutorRepositorio.Eliminar(id);
+        return RedirectToAction(nameof(Index));
     }
 }
