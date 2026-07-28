@@ -1,0 +1,42 @@
+@model Libro
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<h1 class="mb-3">Detalle del libro</h1>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <img src="~/images/@Model.ImagenNombre" class="img-fluid rounded shadow-sm" alt="Portada de @Model.Titulo" />
+    </div>
+    <div class="col-md-8">
+        <h2>@Model.Titulo</h2>
+        <p class="text-muted">@Model.Autor</p>
+
+        <dl class="row">
+            <dt class="col-sm-3">Categoría</dt>
+            <dd class="col-sm-9">@Model.Categoria</dd>
+
+            <dt class="col-sm-3">Año de publicación</dt>
+            <dd class="col-sm-9">@Model.AnioPublicacion</dd>
+
+            <dt class="col-sm-3">Disponibilidad</dt>
+            <dd class="col-sm-9">
+                @if (Model.HayDisponibles)
+                {
+                    <span class="badge bg-success">@Model.Disponibles disponibles</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Sin existencia</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
+        </dl>
+
+        <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>

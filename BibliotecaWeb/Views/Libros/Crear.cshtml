@@ -1,0 +1,64 @@
+@model Libro
+@{
+    ViewData["Title"] = "Agregar libro";
+}
+
+<h1 class="mb-3">Agregar libro</h1>
+
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Crear" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Autor" class="form-label"></label>
+                <input asp-for="Autor" class="form-control" />
+                <span asp-validation-for="Autor" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Categoria" class="form-label"></label>
+                <input asp-for="Categoria" class="form-control" />
+                <span asp-validation-for="Categoria" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="AnioPublicacion" class="form-label"></label>
+                    <input asp-for="AnioPublicacion" class="form-control" />
+                    <span asp-validation-for="AnioPublicacion" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Disponibles" class="form-label"></label>
+                    <input asp-for="Disponibles" class="form-control" />
+                    <span asp-validation-for="Disponibles" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="imagen" class="form-label">Imagen de portada</label>
+                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*" />
+                <div class="form-text">Formatos aceptados: JPG, PNG, WEBP o GIF. Si no selecciona ninguna, se usará una imagen genérica.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
