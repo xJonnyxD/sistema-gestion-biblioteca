@@ -2,28 +2,64 @@
     ViewData["Title"] = "Acerca de";
 }
 
-<h1 class="mb-3">Acerca de</h1>
+<article class="acerca">
+    <header class="acerca-portada">
+        <h1>Biblioteca Virtual</h1>
+        <p>Un espacio digital para acercar los libros a toda la comunidad.</p>
+    </header>
 
-<p>
-    Este proyecto es un <strong>Sistema de Gestión de Biblioteca</strong> desarrollado con
-    ASP.NET Core MVC como parte del módulo de <strong>Programación Web II (Frontend)</strong>.
-</p>
+    <section class="acerca-seccion">
+        <h2>Quiénes somos</h2>
+        <p>
+            La <strong>Biblioteca Virtual</strong> es una plataforma dedicada a la gestión y
+            consulta de un catálogo bibliográfico en línea. Nace como parte del módulo de
+            <em>Programación Web II (Frontend)</em> con el propósito de ofrecer acceso a libros,
+            autores y servicios bibliotecarios desde cualquier lugar y en cualquier momento.
+        </p>
+    </section>
 
-<h4 class="mt-4">Módulos del sistema</h4>
-<ul>
-    <li>Inicio</li>
-    <li>Libros</li>
-    <li>Autores</li>
-    <li>Categorías</li>
-    <li>Usuarios</li>
-    <li>Préstamos</li>
-    <li>Acerca de</li>
-</ul>
+    <section class="acerca-seccion">
+        <h2>Nuestra colección</h2>
+        <div class="acerca-tarjetas">
+            <article class="acerca-tarjeta">
+                <h3>Libros</h3>
+                <p>Un catálogo de obras clásicas y contemporáneas con información de disponibilidad.</p>
+            </article>
+            <article class="acerca-tarjeta">
+                <h3>Autores</h3>
+                <p>Fichas de los autores registrados, con su nacionalidad y trayectoria.</p>
+            </article>
+            <article class="acerca-tarjeta">
+                <h3>Categorías</h3>
+                <p>Clasificación temática que facilita la búsqueda dentro del catálogo.</p>
+            </article>
+        </div>
+    </section>
 
-<h4 class="mt-4">Tecnologías utilizadas</h4>
-<ul>
-    <li>ASP.NET Core MVC (.NET 10)</li>
-    <li>C#</li>
-    <li>Razor</li>
-    <li>Bootstrap 5</li>
-</ul>
+    <section class="acerca-seccion">
+        <h2>Servicios bibliotecarios</h2>
+        <ul class="acerca-servicios">
+            <li><strong>Préstamo de libros:</strong> solicitud de ejemplares y control de devoluciones.</li>
+            <li><strong>Consulta en línea:</strong> búsqueda por título, autor o categoría.</li>
+            <li><strong>Gestión de usuarios:</strong> registro de lectores habilitados para préstamos.</li>
+            <li><strong>Acceso permanente:</strong> disponible las 24 horas, todos los días.</li>
+        </ul>
+    </section>
+
+    <section class="acerca-seccion">
+        <h2>Misión</h2>
+        <blockquote class="acerca-cita">
+            Promover la lectura y el acceso al conocimiento mediante una plataforma sencilla,
+            ordenada y disponible para toda la comunidad.
+        </blockquote>
+    </section>
+
+    <footer class="acerca-contacto">
+        <h2>Contacto</h2>
+        <address>
+            Biblioteca Virtual<br />
+            Correo: <a href="mailto:contacto@biblioteca.edu.sv">contacto@biblioteca.edu.sv</a><br />
+            Horario de atención en línea: 24 horas
+        </address>
+    </footer>
+</article>
