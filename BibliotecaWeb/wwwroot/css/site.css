@@ -29,3 +29,356 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ==========================================================================
+   Página Inicio (Home) — refinamiento visual sobre componentes Bootstrap
+   ========================================================================== */
+
+:root {
+  --biblio-navy: #16233d;
+  --biblio-navy-2: #24365c;
+  --biblio-amber: #c8963e;
+  --biblio-amber-soft: #e0b968;
+  --biblio-cream: #f7f3ea;
+  --biblio-line: #ece7dc;
+}
+
+.home-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--biblio-navy);
+  font-weight: 700;
+}
+
+.home-heading small {
+  display: block;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #6b7280;
+  margin-top: 0.15rem;
+}
+
+/* --- Hero de dos columnas --- */
+.home-hero {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(200, 150, 62, 0.25), transparent 45%),
+    linear-gradient(135deg, var(--biblio-navy-2) 0%, var(--biblio-navy) 70%);
+  color: var(--biblio-cream);
+  border-radius: 1rem;
+  padding: clamp(2rem, 5vw, 3.75rem);
+  overflow: hidden;
+}
+
+.home-hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  line-height: 1.12;
+  margin-bottom: 1rem;
+}
+
+.home-hero__lead {
+  color: rgba(247, 243, 234, 0.82);
+  font-size: 1.12rem;
+  max-width: 34rem;
+}
+
+.home-accent {
+  color: var(--biblio-amber-soft);
+}
+
+.btn-biblio {
+  background-color: var(--biblio-amber);
+  border-color: var(--biblio-amber);
+  color: var(--biblio-navy);
+  font-weight: 600;
+}
+
+.btn-biblio:hover,
+.btn-biblio:focus {
+  background-color: var(--biblio-amber-soft);
+  border-color: var(--biblio-amber-soft);
+  color: var(--biblio-navy);
+}
+
+/* Portadas en abanico dentro del hero */
+.home-hero__covers {
+  position: relative;
+  min-height: 280px;
+}
+
+.home-hero__cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  border-radius: 6px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease;
+}
+
+.home-hero__cover--1 { transform: translate(-90%, -50%) rotate(-9deg); z-index: 1; }
+.home-hero__cover--2 { transform: translate(-50%, -54%); z-index: 3; }
+.home-hero__cover--3 { transform: translate(-10%, -50%) rotate(9deg); z-index: 2; }
+
+.home-hero__covers:hover .home-hero__cover--1 { transform: translate(-100%, -50%) rotate(-12deg); }
+.home-hero__covers:hover .home-hero__cover--3 { transform: translate(0, -50%) rotate(12deg); }
+
+/* --- Franja de estadísticas --- */
+.home-stats {
+  background: #ffffff;
+  border: 1px solid var(--biblio-line);
+  border-radius: 0.85rem;
+  box-shadow: 0 4px 14px rgba(22, 35, 61, 0.05);
+}
+
+.home-stat {
+  text-align: center;
+  padding: 1.4rem 0.5rem;
+}
+
+.home-stat + .home-stat {
+  border-left: 1px solid var(--biblio-line);
+}
+
+.home-stat__num {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--biblio-amber);
+  line-height: 1;
+}
+
+.home-stat__label {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-top: 0.35rem;
+}
+
+/* --- Tarjetas de módulos --- */
+.home-module {
+  background: #ffffff;
+  border: 1px solid var(--biblio-line);
+  border-radius: 0.85rem;
+  height: 100%;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.home-module:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(22, 35, 61, 0.12);
+  border-color: #d9cfb8;
+}
+
+.home-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #f2ede1;
+  color: var(--biblio-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home-module:hover .home-icon {
+  background: var(--biblio-amber);
+}
+
+.home-icon svg { width: 24px; height: 24px; }
+
+/* --- Carrusel --- */
+.home-carousel {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(22, 35, 61, 0.12);
+}
+
+.home-carousel .carousel-inner {
+  background: linear-gradient(135deg, var(--biblio-navy-2), var(--biblio-navy));
+}
+
+.home-carousel__slide {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-carousel__slide img {
+  height: 300px;
+  border-radius: 6px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Servicios --- */
+.home-service__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--biblio-navy);
+  color: var(--biblio-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home-service__icon svg { width: 22px; height: 22px; }
+
+/* --- Responsivo del hero --- */
+@media (max-width: 767px) {
+  .home-hero__covers { display: none; }
+}
+
+/* ==========================================================================
+   Página "Acerca de" — estilos personalizados (CSS3)
+   ========================================================================== */
+
+.acerca {
+  --acerca-azul: #1a365d;
+  --acerca-azul-claro: #2b6cb0;
+  --acerca-borde: #e2e8f0;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #2d3748;
+}
+
+.acerca-portada {
+  background: linear-gradient(135deg, var(--acerca-azul) 0%, var(--acerca-azul-claro) 100%);
+  color: #ffffff;
+  padding: 3rem 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.acerca-portada h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.acerca-portada p {
+  font-size: 1.15rem;
+  margin-bottom: 0;
+  opacity: 0.9;
+}
+
+.acerca-seccion {
+  margin-bottom: 2.5rem;
+}
+
+.acerca-seccion h2 {
+  color: var(--acerca-azul);
+  font-size: 1.5rem;
+  border-bottom: 3px solid var(--acerca-azul-claro);
+  padding-bottom: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.acerca-seccion p {
+  line-height: 1.7;
+}
+
+/* Rejilla de tarjetas con CSS Grid (sin depender de Bootstrap) */
+.acerca-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.acerca-tarjeta {
+  background-color: #f7fafc;
+  border: 1px solid var(--acerca-borde);
+  border-left: 4px solid var(--acerca-azul-claro);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.acerca-tarjeta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+.acerca-tarjeta h3 {
+  color: var(--acerca-azul);
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.acerca-servicios {
+  list-style: none;
+  padding-left: 0;
+}
+
+.acerca-servicios li {
+  padding: 0.6rem 0 0.6rem 1.75rem;
+  border-bottom: 1px solid var(--acerca-borde);
+  position: relative;
+}
+
+.acerca-servicios li::before {
+  content: "📕";
+  position: absolute;
+  left: 0;
+}
+
+.acerca-cita {
+  background-color: #ebf8ff;
+  border-left: 5px solid var(--acerca-azul-claro);
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.35rem;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--acerca-azul);
+}
+
+.acerca-contacto {
+  border-top: 2px solid var(--acerca-borde);
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.acerca-contacto h2 {
+  color: var(--acerca-azul);
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.acerca-contacto address {
+  font-style: normal;
+  line-height: 1.8;
+}
+
+/* --------------------------------------------------------------------------
+   Diseño responsivo — Media Queries
+   -------------------------------------------------------------------------- */
+
+/* Tablet: la rejilla de tarjetas pasa a 2 columnas */
+@media (max-width: 992px) {
+  .acerca-tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Móvil: una sola columna y portada más compacta */
+@media (max-width: 576px) {
+  .acerca-tarjetas {
+    grid-template-columns: 1fr;
+  }
+
+  .acerca-portada {
+    padding: 2rem 1rem;
+  }
+
+  .acerca-portada h1 {
+    font-size: 1.9rem;
+  }
+}
