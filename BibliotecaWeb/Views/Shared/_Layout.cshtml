@@ -11,9 +11,11 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-biblio shadow-sm mb-4" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Biblioteca</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="navbar-brand__mark">📖</span> Biblioteca Virtual
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,9 +32,10 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer-biblio">
         <div class="container">
-            &copy; 2026 - Sistema de Gestión de Biblioteca - <a asp-area="" asp-controller="Home" asp-action="AcercaDe">Acerca de</a>
+            &copy; 2026 Biblioteca Virtual &mdash; Sistema de Gestión de Biblioteca
+            &middot; <a asp-area="" asp-controller="Home" asp-action="AcercaDe">Acerca de</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
