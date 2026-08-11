@@ -17,10 +17,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
-}
-
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
@@ -41,6 +37,117 @@ body {
   --biblio-amber-soft: #e0b968;
   --biblio-cream: #f7f3ea;
   --biblio-line: #ece7dc;
+}
+
+/* ==========================================================================
+   Sistema (global) — se aplica a todas las páginas para dar coherencia visual
+   ========================================================================== */
+
+body {
+  background-color: #fbfaf7;
+  color: #2d3748;
+}
+
+/* --- Barra de navegación con marca --- */
+.navbar-biblio {
+  background: linear-gradient(135deg, var(--biblio-navy-2) 0%, var(--biblio-navy) 75%);
+}
+
+.navbar-biblio .navbar-brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--biblio-cream);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navbar-biblio .navbar-brand__mark {
+  font-size: 1.2rem;
+}
+
+.navbar-biblio .nav-link {
+  color: rgba(247, 243, 234, 0.82);
+  font-weight: 500;
+  padding-inline: 0.85rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbar-biblio .nav-link:hover,
+.navbar-biblio .nav-link:focus {
+  color: #ffffff;
+  border-bottom-color: var(--biblio-amber);
+}
+
+/* --- Títulos de página (todas las vistas del CRUD) --- */
+main h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  color: var(--biblio-navy);
+}
+
+/* --- Tablas --- */
+.table > thead.table-dark {
+  --bs-table-bg: var(--biblio-navy);
+}
+
+.table {
+  border-color: var(--biblio-line);
+}
+
+/* --- Tarjetas del catálogo --- */
+.card {
+  border-color: var(--biblio-line);
+  border-radius: 0.75rem;
+}
+
+.card.h-100 {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card.h-100:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(22, 35, 61, 0.12);
+}
+
+/* --- Botones con la paleta de marca --- */
+.btn-primary {
+  --bs-btn-bg: var(--biblio-navy);
+  --bs-btn-border-color: var(--biblio-navy);
+  --bs-btn-hover-bg: var(--biblio-navy-2);
+  --bs-btn-hover-border-color: var(--biblio-navy-2);
+  --bs-btn-active-bg: var(--biblio-navy-2);
+  --bs-btn-active-border-color: var(--biblio-navy-2);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--biblio-navy);
+  --bs-btn-border-color: var(--biblio-navy);
+  --bs-btn-hover-bg: var(--biblio-navy);
+  --bs-btn-hover-border-color: var(--biblio-navy);
+  --bs-btn-active-bg: var(--biblio-navy);
+  --bs-btn-active-border-color: var(--biblio-navy);
+}
+
+/* --- Pie de página con marca --- */
+.footer-biblio {
+  border-top: 3px solid var(--biblio-amber);
+  background-color: var(--biblio-navy);
+  color: rgba(247, 243, 234, 0.75);
+  padding: 1.25rem 0;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+}
+
+.footer-biblio a {
+  color: var(--biblio-amber-soft);
+  text-decoration: none;
+}
+
+.footer-biblio a:hover {
+  text-decoration: underline;
 }
 
 .home-heading {
