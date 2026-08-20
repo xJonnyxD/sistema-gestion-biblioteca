@@ -6,10 +6,10 @@
     var destacados = LibroRepositorio.Listar().Take(3).ToList();
 }
 
-<!-- Hero de dos columnas (Bootstrap grid + refinamiento) -->
+<!-- Hero organizado con CSS Flexbox -->
 <section class="home-hero mb-5">
-    <div class="row align-items-center g-4">
-        <div class="col-lg-6">
+    <div class="home-hero__inner">
+        <div class="home-hero__col">
             <h1>Descubre tu próxima <span class="home-accent">lectura</span></h1>
             <p class="home-hero__lead mb-4">
                 Explora el catálogo, conoce a los autores y gestiona tus préstamos
@@ -20,7 +20,7 @@
                 <a class="btn btn-outline-light btn-lg" asp-controller="Home" asp-action="AcercaDe">Conocer más</a>
             </div>
         </div>
-        <div class="col-lg-6 d-none d-md-block">
+        <div class="home-hero__col d-none d-md-block">
             <div class="home-hero__covers">
                 @if (destacados.Count > 0)
                 {
@@ -94,117 +94,99 @@
     </button>
 </div>
 
-<!-- Módulos del sistema -->
+<!-- Sección estructurada con CSS Grid (componente reutilizable .biblio-card) -->
 <h2 class="home-heading h4 mb-3">Explora la biblioteca <small>Accede a cada área del sistema</small></h2>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-5">
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </span>
-                <h5 class="mb-0">Libros</h5>
-            </div>
-            <p class="text-muted">Consulta el catálogo, revisa la disponibilidad y administra los ejemplares.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Libros" asp-action="Index">Ir a Libros</a>
+<div class="biblio-grid mb-5">
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Libros</h3>
         </div>
-    </div>
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
-                </span>
-                <h5 class="mb-0">Autores</h5>
-            </div>
-            <p class="text-muted">Conoce a los autores registrados y mantén su información al día.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Autores" asp-action="Index">Ir a Autores</a>
+        <p class="biblio-card__text">Consulta el catálogo, revisa la disponibilidad y administra los ejemplares.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Libros" asp-action="Index">Ir a Libros</a>
+    </article>
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Autores</h3>
         </div>
-    </div>
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                </span>
-                <h5 class="mb-0">Categorías</h5>
-            </div>
-            <p class="text-muted">Organiza las obras por categoría para encontrarlas con facilidad.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Categorias" asp-action="Index">Ir a Categorías</a>
+        <p class="biblio-card__text">Conoce a los autores registrados y mantén su información al día.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Autores" asp-action="Index">Ir a Autores</a>
+    </article>
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Categorías</h3>
         </div>
-    </div>
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </span>
-                <h5 class="mb-0">Usuarios</h5>
-            </div>
-            <p class="text-muted">Administra los usuarios habilitados para solicitar préstamos.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Usuarios" asp-action="Index">Ir a Usuarios</a>
+        <p class="biblio-card__text">Organiza las obras por categoría para encontrarlas con facilidad.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Categorias" asp-action="Index">Ir a Categorías</a>
+    </article>
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Usuarios</h3>
         </div>
-    </div>
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                </span>
-                <h5 class="mb-0">Préstamos</h5>
-            </div>
-            <p class="text-muted">Registra los préstamos y lleva el control de las devoluciones.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Prestamos" asp-action="Index">Ir a Préstamos</a>
+        <p class="biblio-card__text">Administra los usuarios habilitados para solicitar préstamos.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Usuarios" asp-action="Index">Ir a Usuarios</a>
+    </article>
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Préstamos</h3>
         </div>
-    </div>
-    <div class="col">
-        <div class="home-module p-4">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span class="home-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                </span>
-                <h5 class="mb-0">Acerca de</h5>
-            </div>
-            <p class="text-muted">Conoce más sobre la biblioteca y los servicios que ofrece.</p>
-            <a class="btn btn-outline-primary btn-sm" asp-controller="Home" asp-action="AcercaDe">Ir a Acerca de</a>
+        <p class="biblio-card__text">Registra los préstamos y lleva el control de las devoluciones.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Prestamos" asp-action="Index">Ir a Préstamos</a>
+    </article>
+    <article class="biblio-card">
+        <div class="biblio-card__head">
+            <span class="biblio-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </span>
+            <h3 class="biblio-card__title">Acerca de</h3>
         </div>
-    </div>
+        <p class="biblio-card__text">Conoce más sobre la biblioteca y los servicios que ofrece.</p>
+        <a class="btn btn-outline-primary btn-sm align-self-start" asp-controller="Home" asp-action="AcercaDe">Ir a Acerca de</a>
+    </article>
 </div>
 
-<!-- Servicios bibliotecarios -->
+<!-- Servicios bibliotecarios organizados con Flexbox (componente .biblio-feature) -->
 <h2 class="home-heading h4 mb-3">Servicios bibliotecarios <small>Lo que ofrece la biblioteca</small></h2>
-<div class="row g-4 mb-2">
-    <div class="col-md-4">
-        <div class="d-flex align-items-start gap-3">
-            <span class="home-service__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            </span>
-            <div>
-                <h5 class="mb-1">Préstamo de libros</h5>
-                <p class="text-muted mb-0">Solicita ejemplares del catálogo y gestiona tus fechas de devolución.</p>
-            </div>
+<div class="biblio-flex mb-2">
+    <div class="biblio-feature">
+        <span class="biblio-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        <div>
+            <h3 class="biblio-feature__title">Préstamo de libros</h3>
+            <p class="biblio-feature__text">Solicita ejemplares del catálogo y gestiona tus fechas de devolución.</p>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="d-flex align-items-start gap-3">
-            <span class="home-service__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </span>
-            <div>
-                <h5 class="mb-1">Consulta en línea</h5>
-                <p class="text-muted mb-0">Busca libros por título, autor o categoría desde cualquier dispositivo.</p>
-            </div>
+    <div class="biblio-feature">
+        <span class="biblio-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <div>
+            <h3 class="biblio-feature__title">Consulta en línea</h3>
+            <p class="biblio-feature__text">Busca libros por título, autor o categoría desde cualquier dispositivo.</p>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="d-flex align-items-start gap-3">
-            <span class="home-service__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </span>
-            <div>
-                <h5 class="mb-1">Acceso permanente</h5>
-                <p class="text-muted mb-0">La plataforma está disponible las 24 horas, todos los días del año.</p>
-            </div>
+    <div class="biblio-feature">
+        <span class="biblio-feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div>
+            <h3 class="biblio-feature__title">Acceso permanente</h3>
+            <p class="biblio-feature__text">La plataforma está disponible las 24 horas, todos los días del año.</p>
         </div>
     </div>
 </div>
