@@ -1,0 +1,35 @@
+@model Autor
+@{
+    ViewData["Title"] = "Detalle del autor";
+}
+
+<h1 class="mb-3">Detalle del autor</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">#</dt>
+    <dd class="col-sm-9">@Model.Id</dd>
+
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre @Model.Apellido</dd>
+
+    <dt class="col-sm-3">Nacionalidad</dt>
+    <dd class="col-sm-9">@Model.Nacionalidad</dd>
+
+    <dt class="col-sm-3">Fecha de nacimiento</dt>
+    <dd class="col-sm-9">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">
+        @if (Model.Activo)
+        {
+            <span class="badge bg-success">Activo</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Inactivo</span>
+        }
+    </dd>
+</dl>
+
+<a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
