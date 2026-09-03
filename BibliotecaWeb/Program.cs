@@ -1,8 +1,17 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using BibliotecaWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// Inyección de Dependencias: se asocia la abstracción IAutorService con su
+// implementación AutorService, usando el ciclo de vida Scoped (una instancia por petición).
+builder.Services.AddScoped<IAutorService, AutorService>();
+
+// Reto (SOLID / IoC / DI): para usar la segunda implementación basta con cambiar
+// la línea anterior por la siguiente. El AutoresController no requiere modificación.
+// builder.Services.AddScoped<IAutorService, AutorServiceDemo>();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
