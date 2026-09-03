@@ -1,8 +1,9 @@
 @using BibliotecaWeb.Data
+@inject BibliotecaWeb.Services.IAutorService AutorService
 @{
     ViewData["Title"] = "Inicio";
     var totalLibros = LibroRepositorio.Listar().Count;
-    var totalAutores = AutorRepositorio.Listar().Count;
+    var totalAutores = AutorService.ObtenerTodos().Count();
     var destacados = LibroRepositorio.Listar().Take(3).ToList();
 }
 
