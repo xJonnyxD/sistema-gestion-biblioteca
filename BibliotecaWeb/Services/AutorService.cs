@@ -1,14 +1,13 @@
 using BibliotecaWeb.Models;
 
-namespace BibliotecaWeb.Data;
+namespace BibliotecaWeb.Services;
 
 /// <summary>
-/// Almacén de autores en memoria. Conserva los datos mientras la aplicación
-/// está en ejecución, de modo que las operaciones de edición y eliminación se
-/// reflejan en el listado. Cuando se incorpore Entity Framework, esta clase se
-/// reemplaza por el acceso a la base de datos sin tocar controladores ni vistas.
+/// Implementación de <see cref="IAutorService"/>. Contiene la lógica de gestión y
+/// consulta de los autores. Los datos se mantienen en una lista en memoria
+/// (compartida entre peticiones) mientras la aplicación está en ejecución.
 /// </summary>
-public static class AutorRepositorio
+public class AutorService : IAutorService
 {
     private static readonly List<Autor> _autores = new()
     {
@@ -19,13 +18,13 @@ public static class AutorRepositorio
         new Autor { Id = 5, Nombre = "Claribel", Apellido = "Alegría", Nacionalidad = "Salvadoreña", FechaNacimiento = new DateTime(1924, 5, 12), Activo = true }
     };
 
-    public static IReadOnlyList<Autor> Listar() => _autores;
+    public IEnumerable<Autor> ObtenerTodos() => _autores;
 
-    public static Autor? Obtener(int id) => _autores.FirstOrDefault(a => a.Id == id);
+    public Autor? ObtenerPorId(int id) => _autores.FirstOrDefault(a => a.Id == id);
 
-    public static void Actualizar(Autor autor)
+    public void Actualizar(Autor autor)
     {
-        var actual = Obtener(autor.Id);
+        var actual = ObtenerPorId(autor.Id);
         if (actual is null)
         {
             return;
@@ -38,9 +37,9 @@ public static class AutorRepositorio
         actual.Activo = autor.Activo;
     }
 
-    public static void Eliminar(int id)
+    public void Eliminar(int id)
     {
-        var autor = Obtener(id);
+        var autor = ObtenerPorId(id);
         if (autor is not null)
         {
             _autores.Remove(autor);
