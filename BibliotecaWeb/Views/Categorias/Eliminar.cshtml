@@ -1,0 +1,36 @@
+@model Categoria
+@{
+    ViewData["Title"] = "Eliminar categoría";
+}
+
+<h1 class="mb-3">Eliminar categoría</h1>
+
+<div class="alert alert-danger">
+    ¿Está seguro de que desea eliminar esta categoría? Esta acción no se puede deshacer.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre</dd>
+
+    <dt class="col-sm-3">Descripción</dt>
+    <dd class="col-sm-9">@Model.Descripcion</dd>
+
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">
+        @if (Model.Activa)
+        {
+            <span class="badge bg-success">Activa</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Inactiva</span>
+        }
+    </dd>
+</dl>
+
+<form asp-action="EliminarConfirmado" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
