@@ -1,9 +1,16 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using BibliotecaWeb.Data;
 using BibliotecaWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// Entity Framework Core: registra el ApplicationDbContext y lo configura para
+// comunicarse con SQL Server usando la cadena de conexión "BibliotecaDB".
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BibliotecaDB")));
 
 // Inyección de Dependencias: se asocia la abstracción IAutorService con su
 // implementación AutorService, usando el ciclo de vida Scoped (una instancia por petición).
