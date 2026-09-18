@@ -1,10 +1,11 @@
-@using BibliotecaWeb.Data
+@model IEnumerable<Libro>
 @inject BibliotecaWeb.Services.IAutorService AutorService
 @{
     ViewData["Title"] = "Inicio";
-    var totalLibros = LibroRepositorio.Listar().Count;
+    var libros = Model.ToList();
+    var totalLibros = libros.Count;
     var totalAutores = AutorService.ObtenerTodos().Count();
-    var destacados = LibroRepositorio.Listar().Take(3).ToList();
+    var destacados = libros.Take(3).ToList();
 }
 
 <!-- Hero organizado con CSS Flexbox -->
@@ -17,8 +18,8 @@
                 desde una biblioteca virtual disponible a cualquier hora.
             </p>
             <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-biblio btn-lg" asp-controller="Libros" asp-action="Index">Explorar catálogo</a>
-                <a class="btn btn-outline-light btn-lg" asp-controller="Home" asp-action="AcercaDe">Conocer más</a>
+                <a class="btn btn-primary btn-lg" asp-controller="Libros" asp-action="Index">Explorar catálogo</a>
+                <a class="btn btn-outline-primary btn-lg" asp-controller="Home" asp-action="AcercaDe">Conocer más</a>
             </div>
         </div>
         <div class="home-hero__col d-none d-md-block">

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" width="400" height="560">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#44337a"/><stop offset="1" stop-color="#6b46c1"/></linearGradient></defs>
-  <rect width="400" height="560" fill="url(#g)"/>
-  <rect x="18" y="18" width="364" height="524" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
-  <text x="200" y="250" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="bold" fill="#ffffff">Cenizas</text>
-  <text x="200" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="bold" fill="#ffffff">de Izalco</text>
-  <text x="200" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#ffffff" fill-opacity="0.85">Claribel Alegría</text>
-</svg>

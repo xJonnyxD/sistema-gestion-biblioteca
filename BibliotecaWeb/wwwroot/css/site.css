@@ -1,5 +1,47 @@
+/* ==========================================================================
+   Sistema de diseño "Literal" — reading room en luz de día.
+   Lienzo gris cálido, tarjetas blancas con borde fino, un único acento verde
+   para la acción primaria, títulos en serif editorial (Libre Baskerville) y
+   todo lo funcional en Inter. Ver Design.md en la raíz del repositorio.
+   ========================================================================== */
+
+:root {
+  /* Colores */
+  --color-forest-green: #278458;
+  --color-forest-green-dark: #1f6c47;
+  --color-charcoal: #444340;
+  --color-soft-gray: #f8f8f8;
+  --color-warm-gray: #9a988b;
+  --color-hairline-gray: #eeeeee;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+
+  /* Tipografía */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-libre-baskerville: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+
+  /* Radios */
+  --radius-images: 4px;
+  --radius-buttons: 4px;
+  --radius-cards: 8px;
+  --radius-other: 16px;
+
+  /* Elevación (borde + sombra mínima 1–2%) */
+  --elevation-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 1px var(--color-hairline-gray);
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 80px;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
 html {
-  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  font-size: 15px;
 }
 
 @media (min-width: 768px) {
@@ -8,68 +50,95 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
-/* ==========================================================================
-   Página Inicio (Home) — refinamiento visual sobre componentes Bootstrap
-   ========================================================================== */
-
-:root {
-  --biblio-navy: #16233d;
-  --biblio-navy-2: #24365c;
-  --biblio-amber: #c8963e;
-  --biblio-amber-soft: #e0b968;
-  --biblio-cream: #f7f3ea;
-  --biblio-line: #ece7dc;
-}
-
-/* ==========================================================================
-   Sistema (global) — se aplica a todas las páginas para dar coherencia visual
-   ========================================================================== */
-
 body {
-  background-color: #fbfaf7;
-  color: #2d3748;
+  background-color: var(--color-soft-gray);
+  color: var(--color-charcoal);
+  font-family: var(--font-inter);
+  line-height: 1.5;
 }
 
-/* --- Barra de navegación con marca --- */
+.container {
+  max-width: var(--page-max-width);
+}
+
+/* Anillo de foco en verde de marca */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus, .form-select:focus {
+  box-shadow: 0 0 0 0.1rem #ffffff, 0 0 0 0.25rem var(--color-forest-green);
+  border-color: var(--color-forest-green);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-forest-green);
+  border-color: var(--color-forest-green);
+}
+
+a {
+  color: var(--color-forest-green);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-forest-green-dark);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Tipografía — serif reservado a los títulos, Inter para todo lo demás
+   -------------------------------------------------------------------------- */
+
+main h1,
+.home-heading,
+.section-heading,
+.acerca-portada h1,
+.acerca-seccion h2,
+.acerca-contacto h2 {
+  font-family: var(--font-libre-baskerville);
+  font-weight: 400;
+  color: var(--color-ink-black);
+  line-height: 1.35;
+}
+
+main h1 {
+  font-size: clamp(1.8rem, 3.2vw, 2.2rem);
+  margin-bottom: 0.25rem;
+}
+
+.text-muted,
+.home-stat__label,
+.biblio-card__text,
+.biblio-feature__text {
+  color: var(--color-warm-gray) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Barra de navegación (tema claro, hairline inferior)
+   -------------------------------------------------------------------------- */
+
 .navbar-biblio {
-  background: linear-gradient(135deg, var(--biblio-navy-2) 0%, var(--biblio-navy) 75%);
+  background-color: var(--color-paper-white);
+  border-bottom: 1px solid var(--color-hairline-gray);
 }
 
 .navbar-biblio .navbar-brand {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-inter);
   font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--biblio-cream);
+  font-size: 1.35rem;
+  color: var(--color-ink-black);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
 }
 
-.navbar-biblio .navbar-brand__mark {
-  font-size: 1.2rem;
+.navbar-biblio .navbar-brand__star {
+  color: var(--color-forest-green);
+  margin-left: 0.15rem;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .navbar-biblio .nav-link {
-  color: rgba(247, 243, 234, 0.82);
-  font-weight: 500;
+  color: var(--color-charcoal);
+  font-weight: 400;
   padding-inline: 0.85rem;
   border-bottom: 2px solid transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
@@ -77,72 +146,202 @@ body {
 
 .navbar-biblio .nav-link:hover,
 .navbar-biblio .nav-link:focus {
-  color: #ffffff;
-  border-bottom-color: var(--biblio-amber);
+  color: var(--color-forest-green);
+  border-bottom-color: var(--color-forest-green);
 }
 
-/* --- Títulos de página (todas las vistas del CRUD) --- */
-main h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 700;
-  color: var(--biblio-navy);
+.navbar-biblio .navbar-toggler {
+  border-color: var(--color-hairline-gray);
 }
 
-/* --- Tablas --- */
-.table > thead.table-dark {
-  --bs-table-bg: var(--biblio-navy);
+/* --------------------------------------------------------------------------
+   Botones — verde para la acción primaria, 4px de radio, sin píldoras
+   -------------------------------------------------------------------------- */
+
+.btn {
+  border-radius: var(--radius-buttons);
+  font-family: var(--font-inter);
+  font-weight: 500;
 }
 
-.table {
-  border-color: var(--biblio-line);
-}
-
-/* --- Tarjetas del catálogo --- */
-.card {
-  border-color: var(--biblio-line);
-  border-radius: 0.75rem;
-}
-
-.card.h-100 {
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.card.h-100:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(22, 35, 61, 0.12);
-}
-
-/* --- Botones con la paleta de marca --- */
-.btn-primary {
-  --bs-btn-bg: var(--biblio-navy);
-  --bs-btn-border-color: var(--biblio-navy);
-  --bs-btn-hover-bg: var(--biblio-navy-2);
-  --bs-btn-hover-border-color: var(--biblio-navy-2);
-  --bs-btn-active-bg: var(--biblio-navy-2);
-  --bs-btn-active-border-color: var(--biblio-navy-2);
+.btn-primary,
+.btn-biblio {
+  --bs-btn-bg: var(--color-forest-green);
+  --bs-btn-border-color: var(--color-forest-green);
+  --bs-btn-color: var(--color-paper-white);
+  --bs-btn-hover-bg: var(--color-forest-green-dark);
+  --bs-btn-hover-border-color: var(--color-forest-green-dark);
+  --bs-btn-hover-color: var(--color-paper-white);
+  --bs-btn-active-bg: var(--color-forest-green-dark);
+  --bs-btn-active-border-color: var(--color-forest-green-dark);
 }
 
 .btn-outline-primary {
-  --bs-btn-color: var(--biblio-navy);
-  --bs-btn-border-color: var(--biblio-navy);
-  --bs-btn-hover-bg: var(--biblio-navy);
-  --bs-btn-hover-border-color: var(--biblio-navy);
-  --bs-btn-active-bg: var(--biblio-navy);
-  --bs-btn-active-border-color: var(--biblio-navy);
+  --bs-btn-color: var(--color-charcoal);
+  --bs-btn-border-color: var(--color-charcoal);
+  --bs-btn-hover-bg: var(--color-charcoal);
+  --bs-btn-hover-border-color: var(--color-charcoal);
+  --bs-btn-hover-color: var(--color-paper-white);
+  --bs-btn-active-bg: var(--color-charcoal);
+  --bs-btn-active-border-color: var(--color-charcoal);
 }
 
-/* --- Pie de página con marca --- */
+.btn-secondary {
+  --bs-btn-bg: var(--color-paper-white);
+  --bs-btn-border-color: var(--color-hairline-gray);
+  --bs-btn-color: var(--color-charcoal);
+  --bs-btn-hover-bg: var(--color-soft-gray);
+  --bs-btn-hover-border-color: var(--color-warm-gray);
+  --bs-btn-hover-color: var(--color-charcoal);
+}
+
+/* Acción destructiva: rojo apagado y plano, coherente con el aire de papel */
+.btn-danger {
+  --bs-btn-bg: #b3453a;
+  --bs-btn-border-color: #b3453a;
+  --bs-btn-hover-bg: #97382f;
+  --bs-btn-hover-border-color: #97382f;
+}
+
+/* --------------------------------------------------------------------------
+   Superficies — tarjetas blancas, borde hairline, sombra mínima, planas
+   -------------------------------------------------------------------------- */
+
+.card {
+  background-color: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-cards);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.card.h-100 {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card.h-100:hover {
+  border-color: var(--color-warm-gray);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.card-img-top {
+  border-top-left-radius: var(--radius-cards);
+  border-top-right-radius: var(--radius-cards);
+}
+
+.card-title {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  color: var(--color-ink-black);
+}
+
+/* Imágenes con 4px de radio por defecto */
+.rounded,
+img.rounded {
+  border-radius: var(--radius-images) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Insignias de estado — planas y suaves (tintes), conservan el significado
+   -------------------------------------------------------------------------- */
+
+.badge {
+  font-weight: 500;
+  border-radius: var(--radius-buttons);
+}
+
+.badge.bg-success {
+  background-color: #e7f2ec !important;
+  color: var(--color-forest-green-dark) !important;
+}
+
+.badge.bg-danger {
+  background-color: #f5ecea !important;
+  color: #9a4b3f !important;
+}
+
+.badge.bg-warning {
+  background-color: #f4efe1 !important;
+  color: #8a6d2f !important;
+}
+
+.badge.bg-secondary {
+  background-color: #f0efec !important;
+  color: var(--color-charcoal) !important;
+}
+
+.badge.bg-light {
+  background-color: var(--color-soft-gray) !important;
+  color: var(--color-charcoal) !important;
+  border: 1px solid var(--color-hairline-gray);
+}
+
+/* --------------------------------------------------------------------------
+   Formularios
+   -------------------------------------------------------------------------- */
+
+.form-control,
+.form-select {
+  border-color: var(--color-hairline-gray);
+  border-radius: var(--radius-buttons);
+  color: var(--color-charcoal);
+}
+
+.form-control::placeholder {
+  color: var(--color-warm-gray);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--color-charcoal);
+}
+
+/* --------------------------------------------------------------------------
+   Tablas — cabecera charcoal, bordes hairline
+   -------------------------------------------------------------------------- */
+
+.table {
+  border-color: var(--color-hairline-gray);
+}
+
+.table > thead.table-dark {
+  --bs-table-bg: var(--color-charcoal);
+  --bs-table-color: var(--color-paper-white);
+}
+
+/* --------------------------------------------------------------------------
+   Alertas — planas sobre papel
+   -------------------------------------------------------------------------- */
+
+.alert {
+  border-radius: var(--radius-cards);
+  border: 1px solid var(--color-hairline-gray);
+}
+
+.alert-warning {
+  background-color: #f4efe1;
+  color: #7a6326;
+}
+
+.alert-danger {
+  background-color: #f5ecea;
+  color: #8f4237;
+}
+
+/* --------------------------------------------------------------------------
+   Pie de página — claro, hairline superior, enlace verde
+   -------------------------------------------------------------------------- */
+
 .footer-biblio {
-  border-top: 3px solid var(--biblio-amber);
-  background-color: var(--biblio-navy);
-  color: rgba(247, 243, 234, 0.75);
-  padding: 1.25rem 0;
-  margin-top: 3rem;
+  border-top: 1px solid var(--color-hairline-gray);
+  background-color: var(--color-paper-white);
+  color: var(--color-warm-gray);
+  padding: 1.5rem 0;
+  margin-top: var(--section-gap);
   font-size: 0.9rem;
 }
 
 .footer-biblio a {
-  color: var(--biblio-amber-soft);
+  color: var(--color-forest-green);
   text-decoration: none;
 }
 
@@ -150,120 +349,38 @@ main h1 {
   text-decoration: underline;
 }
 
-.home-heading {
-  font-family: Georgia, "Times New Roman", serif;
-  color: var(--biblio-navy);
-  font-weight: 700;
-}
+/* --------------------------------------------------------------------------
+   Inicio — Hero (panel de papel, título serif, portadas superpuestas)
+   -------------------------------------------------------------------------- */
 
-.home-heading small {
-  display: block;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 400;
-  color: #6b7280;
-  margin-top: 0.15rem;
-}
-
-/* --- Hero de dos columnas --- */
 .home-hero {
-  background:
-    radial-gradient(circle at 85% 15%, rgba(200, 150, 62, 0.25), transparent 45%),
-    linear-gradient(135deg, var(--biblio-navy-2) 0%, var(--biblio-navy) 70%);
-  color: var(--biblio-cream);
-  border-radius: 1rem;
-  padding: clamp(2rem, 5vw, 3.75rem);
+  background-color: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  color: var(--color-charcoal);
+  border-radius: var(--radius-other);
+  padding: clamp(2rem, 5vw, 3.5rem);
   overflow: hidden;
 }
 
 .home-hero h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 700;
-  font-size: clamp(2rem, 4.2vw, 3.1rem);
-  line-height: 1.12;
+  font-family: var(--font-libre-baskerville);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.2vw, 2.8rem);
+  line-height: 1.2;
+  color: var(--color-ink-black);
   margin-bottom: 1rem;
 }
 
 .home-hero__lead {
-  color: rgba(247, 243, 234, 0.82);
-  font-size: 1.12rem;
+  color: var(--color-warm-gray);
+  font-size: 1.1rem;
   max-width: 34rem;
 }
 
 .home-accent {
-  color: var(--biblio-amber-soft);
+  color: var(--color-forest-green);
 }
 
-.btn-biblio {
-  background-color: var(--biblio-amber);
-  border-color: var(--biblio-amber);
-  color: var(--biblio-navy);
-  font-weight: 600;
-}
-
-.btn-biblio:hover,
-.btn-biblio:focus {
-  background-color: var(--biblio-amber-soft);
-  border-color: var(--biblio-amber-soft);
-  color: var(--biblio-navy);
-}
-
-/* Portadas en abanico dentro del hero */
-.home-hero__covers {
-  position: relative;
-  min-height: 280px;
-}
-
-.home-hero__cover {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 160px;
-  border-radius: 6px;
-  border: 3px solid #ffffff;
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
-  transition: transform 0.25s ease;
-}
-
-.home-hero__cover--1 { transform: translate(-90%, -50%) rotate(-9deg); z-index: 1; }
-.home-hero__cover--2 { transform: translate(-50%, -54%); z-index: 3; }
-.home-hero__cover--3 { transform: translate(-10%, -50%) rotate(9deg); z-index: 2; }
-
-.home-hero__covers:hover .home-hero__cover--1 { transform: translate(-100%, -50%) rotate(-12deg); }
-.home-hero__covers:hover .home-hero__cover--3 { transform: translate(0, -50%) rotate(12deg); }
-
-/* --- Franja de estadísticas --- */
-.home-stats {
-  background: #ffffff;
-  border: 1px solid var(--biblio-line);
-  border-radius: 0.85rem;
-  box-shadow: 0 4px 14px rgba(22, 35, 61, 0.05);
-}
-
-.home-stat {
-  text-align: center;
-  padding: 1.4rem 0.5rem;
-}
-
-.home-stat + .home-stat {
-  border-left: 1px solid var(--biblio-line);
-}
-
-.home-stat__num {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.1rem;
-  font-weight: 700;
-  color: var(--biblio-amber);
-  line-height: 1;
-}
-
-.home-stat__label {
-  color: #6b7280;
-  font-size: 0.9rem;
-  margin-top: 0.35rem;
-}
-
-/* --- Hero organizado con Flexbox --- */
 .home-hero__inner {
   display: flex;
   flex-wrap: wrap;
@@ -275,19 +392,83 @@ main h1 {
   flex: 1 1 320px;
 }
 
-/* ==========================================================================
-   Componentes reutilizables (Flexbox + CSS Grid)
-   Se usan tanto en Inicio como en Acerca de.
-   ========================================================================== */
+/* Portadas superpuestas — proveen el color; 4px, borde blanco, sombra leve */
+.home-hero__covers {
+  position: relative;
+  min-height: 280px;
+}
 
-/* Contenedor con CSS Grid: se adapta solo al ancho disponible */
+.home-hero__cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  border-radius: var(--radius-images);
+  border: 4px solid var(--color-paper-white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease;
+}
+
+.home-hero__cover--1 { transform: translate(-90%, -50%) rotate(-9deg); z-index: 1; }
+.home-hero__cover--2 { transform: translate(-50%, -54%); z-index: 3; }
+.home-hero__cover--3 { transform: translate(-10%, -50%) rotate(9deg); z-index: 2; }
+
+.home-hero__covers:hover .home-hero__cover--1 { transform: translate(-100%, -50%) rotate(-12deg); }
+.home-hero__covers:hover .home-hero__cover--3 { transform: translate(0, -50%) rotate(12deg); }
+
+/* --------------------------------------------------------------------------
+   Inicio — Estadísticas (tarjeta blanca, número serif en tinta)
+   -------------------------------------------------------------------------- */
+
+.home-stats {
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-cards);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.home-stat {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+}
+
+.home-stat + .home-stat {
+  border-left: 1px solid var(--color-hairline-gray);
+}
+
+.home-stat__num {
+  font-family: var(--font-libre-baskerville);
+  font-size: 2.1rem;
+  font-weight: 400;
+  color: var(--color-ink-black);
+  line-height: 1;
+}
+
+.home-stat__label {
+  color: var(--color-warm-gray);
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
+}
+
+.home-heading small {
+  display: block;
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--color-warm-gray);
+  margin-top: 0.2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Componentes reutilizables (CSS Grid + Flexbox)
+   -------------------------------------------------------------------------- */
+
 .biblio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* Contenedor con Flexbox: distribuye los elementos y los ajusta en varias filas */
 .biblio-flex {
   display: flex;
   flex-wrap: wrap;
@@ -298,22 +479,22 @@ main h1 {
   flex: 1 1 260px;
 }
 
-/* Componente reutilizable 1: tarjeta de información */
+/* Tarjeta de sección (feature card) */
 .biblio-card {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  background: #ffffff;
-  border: 1px solid var(--biblio-line);
-  border-radius: 0.85rem;
-  padding: 1.5rem;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-cards);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .biblio-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 28px rgba(22, 35, 61, 0.12);
-  border-color: #d9cfb8;
+  border-color: var(--color-warm-gray);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .biblio-card__head {
@@ -323,38 +504,35 @@ main h1 {
 }
 
 .biblio-card__icon {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  border-radius: 12px;
-  background: #f2ede1;
-  color: var(--biblio-navy);
+  border-radius: var(--radius-images);
+  background: var(--color-soft-gray);
+  border: 1px solid var(--color-hairline-gray);
+  color: var(--color-charcoal);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.biblio-card:hover .biblio-card__icon {
-  background: var(--biblio-amber);
-}
-
-.biblio-card__icon svg { width: 24px; height: 24px; }
+.biblio-card__icon svg { width: 22px; height: 22px; }
 
 .biblio-card__title {
-  font-family: Georgia, "Times New Roman", serif;
-  color: var(--biblio-navy);
-  font-size: 1.15rem;
+  font-family: var(--font-inter);
+  color: var(--color-ink-black);
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
 }
 
 .biblio-card__text {
-  color: #6b7280;
+  color: var(--color-warm-gray);
   margin: 0;
   flex-grow: 1;
 }
 
-/* Componente reutilizable 2: característica (ícono + texto en fila) */
+/* Característica (ícono de línea + texto) */
 .biblio-feature {
   display: flex;
   align-items: flex-start;
@@ -366,8 +544,9 @@ main h1 {
   height: 44px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--biblio-navy);
-  color: var(--biblio-cream);
+  background: var(--color-soft-gray);
+  border: 1px solid var(--color-hairline-gray);
+  color: var(--color-charcoal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,28 +558,31 @@ main h1 {
   margin: 0 0 0.15rem;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--biblio-navy);
+  color: var(--color-ink-black);
 }
 
 .biblio-feature__text {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-warm-gray);
 }
 
-/* Adaptable: una sola columna en móviles */
 @media (max-width: 576px) {
   .biblio-grid { grid-template-columns: 1fr; }
 }
 
-/* --- Carrusel --- */
+/* --------------------------------------------------------------------------
+   Inicio — Carrusel (papel, sin degradados oscuros)
+   -------------------------------------------------------------------------- */
+
 .home-carousel {
-  border-radius: 1rem;
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-other);
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(22, 35, 61, 0.12);
+  background: var(--color-paper-white);
 }
 
 .home-carousel .carousel-inner {
-  background: linear-gradient(135deg, var(--biblio-navy-2), var(--biblio-navy));
+  background: var(--color-soft-gray);
 }
 
 .home-carousel__slide {
@@ -412,49 +594,68 @@ main h1 {
 
 .home-carousel__slide img {
   height: 300px;
-  border-radius: 6px;
-  border: 3px solid #ffffff;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-images);
+  border: 4px solid var(--color-paper-white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Responsivo del hero --- */
+.home-carousel .carousel-caption {
+  color: var(--color-charcoal);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-images);
+  padding: 0.5rem 1rem;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 90%;
+}
+
+.home-carousel .carousel-caption h5 {
+  color: var(--color-ink-black);
+}
+
+.home-carousel .carousel-control-prev-icon,
+.home-carousel .carousel-control-next-icon {
+  filter: invert(1);
+}
+
 @media (max-width: 767px) {
   .home-hero__covers { display: none; }
 }
 
 /* ==========================================================================
-   Página "Acerca de" — estilos personalizados (CSS3)
+   Página "Acerca de" — adaptada a Literal
    ========================================================================== */
 
 .acerca {
-  --acerca-azul: #1a365d;
-  --acerca-azul-claro: #2b6cb0;
-  --acerca-borde: #e2e8f0;
+  --acerca-borde: var(--color-hairline-gray);
   max-width: 900px;
   margin: 0 auto;
-  color: #2d3748;
+  color: var(--color-charcoal);
 }
 
 .acerca-portada {
-  background: linear-gradient(135deg, var(--acerca-azul) 0%, var(--acerca-azul-claro) 100%);
-  color: #ffffff;
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  color: var(--color-charcoal);
   padding: 3rem 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-other);
   text-align: center;
   margin-bottom: 2rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .acerca-portada h1 {
   font-size: 2.5rem;
-  font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .acerca-portada p {
   font-size: 1.15rem;
   margin-bottom: 0;
-  opacity: 0.9;
+  color: var(--color-warm-gray);
 }
 
 .acerca-seccion {
@@ -462,9 +663,8 @@ main h1 {
 }
 
 .acerca-seccion h2 {
-  color: var(--acerca-azul);
   font-size: 1.5rem;
-  border-bottom: 3px solid var(--acerca-azul-claro);
+  border-bottom: 1px solid var(--color-hairline-gray);
   padding-bottom: 0.4rem;
   margin-bottom: 1rem;
 }
@@ -474,24 +674,23 @@ main h1 {
 }
 
 .acerca-cita {
-  background-color: #ebf8ff;
-  border-left: 5px solid var(--acerca-azul-claro);
+  background-color: var(--color-soft-gray);
+  border-left: 3px solid var(--color-forest-green);
   margin: 0;
   padding: 1.25rem 1.5rem;
-  border-radius: 0.35rem;
+  border-radius: var(--radius-images);
   font-style: italic;
   font-size: 1.1rem;
-  color: var(--acerca-azul);
+  color: var(--color-charcoal);
 }
 
 .acerca-contacto {
-  border-top: 2px solid var(--acerca-borde);
+  border-top: 1px solid var(--color-hairline-gray);
   padding-top: 1.5rem;
   margin-top: 2rem;
 }
 
 .acerca-contacto h2 {
-  color: var(--acerca-azul);
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
 }
@@ -501,11 +700,6 @@ main h1 {
   line-height: 1.8;
 }
 
-/* --------------------------------------------------------------------------
-   Diseño responsivo — Media Queries
-   -------------------------------------------------------------------------- */
-
-/* Móvil: portada más compacta */
 @media (max-width: 576px) {
   .acerca-portada {
     padding: 2rem 1rem;

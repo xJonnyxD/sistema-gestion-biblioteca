@@ -1,6 +1,7 @@
 using BibliotecaWeb.Data;
 using BibliotecaWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaWeb.Controllers;
 
@@ -9,21 +10,44 @@ public class LibrosController : Controller
     private const string ImagenPorDefecto = "sin-imagen.svg";
     private static readonly string[] ExtensionesPermitidas = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
 
+    private readonly ApplicationDbContext _context;
     private readonly IWebHostEnvironment _entorno;
 
-    public LibrosController(IWebHostEnvironment entorno)
+    // El controlador recibe el DbContext por inyección de dependencias. A través de él
+    // realiza todas las operaciones contra la base de datos usando Entity Framework Core.
+    public LibrosController(ApplicationDbContext context, IWebHostEnvironment entorno)
     {
+        _context = context;
         _entorno = entorno;
     }
 
-    public IActionResult Index()
+    // MOSTRAR: consulta los libros almacenados en la base de datos. Si se recibe un
+    // término de búsqueda, filtra por título, autor o categoría directamente en la
+    // consulta (Entity Framework Core lo traduce a un WHERE ... LIKE en SQL Server).
+    public async Task<IActionResult> Index(string? buscar)
     {
-        return View(LibroRepositorio.Listar());
+        var consulta = _context.Libros.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(buscar))
+        {
+            var termino = buscar.Trim();
+            consulta = consulta.Where(l =>
+                l.Titulo.Contains(termino) ||
+                l.Autor.Contains(termino) ||
+                l.Categoria.Contains(termino));
+        }
+
+        var libros = await consulta
+            .OrderBy(l => l.Titulo)
+            .ToListAsync();
+
+        ViewData["Buscar"] = buscar;
+        return View(libros);
     }
 
-    public IActionResult Detalle(int id)
+    public async Task<IActionResult> Detalle(int id)
     {
-        var libro = LibroRepositorio.Obtener(id);
+        var libro = await _context.Libros.FindAsync(id);
         if (libro is null)
         {
             return NotFound();
@@ -38,6 +62,7 @@ public class LibrosController : Controller
         return View(new Libro());
     }
 
+    // AGREGAR: registra un nuevo libro en la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Crear(Libro libro, IFormFile? imagen)
@@ -48,14 +73,19 @@ public class LibrosController : Controller
         }
 
         libro.ImagenNombre = await GuardarImagenAsync(imagen) ?? ImagenPorDefecto;
-        LibroRepositorio.Agregar(libro);
+
+        // Add() marca la nueva entidad para inserción y SaveChangesAsync() confirma
+        // los cambios, ejecutando el INSERT correspondiente en SQL Server.
+        _context.Libros.Add(libro);
+        await _context.SaveChangesAsync();
+
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public IActionResult Editar(int id)
+    public async Task<IActionResult> Editar(int id)
     {
-        var libro = LibroRepositorio.Obtener(id);
+        var libro = await _context.Libros.FindAsync(id);
         if (libro is null)
         {
             return NotFound();
@@ -79,14 +109,16 @@ public class LibrosController : Controller
             libro.ImagenNombre = nuevaImagen;
         }
 
-        LibroRepositorio.Actualizar(libro);
+        _context.Libros.Update(libro);
+        await _context.SaveChangesAsync();
+
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public IActionResult Eliminar(int id)
+    public async Task<IActionResult> Eliminar(int id)
     {
-        var libro = LibroRepositorio.Obtener(id);
+        var libro = await _context.Libros.FindAsync(id);
         if (libro is null)
         {
             return NotFound();
@@ -97,9 +129,15 @@ public class LibrosController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult EliminarConfirmado(int id)
+    public async Task<IActionResult> EliminarConfirmado(int id)
     {
-        LibroRepositorio.Eliminar(id);
+        var libro = await _context.Libros.FindAsync(id);
+        if (libro is not null)
+        {
+            _context.Libros.Remove(libro);
+            await _context.SaveChangesAsync();
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
