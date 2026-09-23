@@ -203,6 +203,16 @@ main h1 {
   --bs-btn-hover-border-color: #97382f;
 }
 
+.btn-outline-danger {
+  --bs-btn-color: #b3453a;
+  --bs-btn-border-color: #b3453a;
+  --bs-btn-hover-bg: #b3453a;
+  --bs-btn-hover-border-color: #b3453a;
+  --bs-btn-hover-color: var(--color-paper-white);
+  --bs-btn-active-bg: #97382f;
+  --bs-btn-active-border-color: #97382f;
+}
+
 /* --------------------------------------------------------------------------
    Superficies — tarjetas blancas, borde hairline, sombra mínima, planas
    -------------------------------------------------------------------------- */
@@ -315,6 +325,12 @@ img.rounded {
 .alert {
   border-radius: var(--radius-cards);
   border: 1px solid var(--color-hairline-gray);
+}
+
+.alert-success {
+  background-color: #e7f2ec;
+  color: var(--color-forest-green-dark);
+  border-color: #cfe6da;
 }
 
 .alert-warning {
