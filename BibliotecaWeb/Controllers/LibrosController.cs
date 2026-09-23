@@ -1,7 +1,6 @@
 using BibliotecaWeb.Data;
 using BibliotecaWeb.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaWeb.Controllers;
 
@@ -24,7 +23,7 @@ public class LibrosController : Controller
     // MOSTRAR: consulta los libros almacenados en la base de datos. Si se recibe un
     // término de búsqueda, filtra por título, autor o categoría directamente en la
     // consulta (Entity Framework Core lo traduce a un WHERE ... LIKE en SQL Server).
-    public async Task<IActionResult> Index(string? buscar)
+    public IActionResult Index(string? buscar)
     {
         var consulta = _context.Libros.AsQueryable();
 
@@ -37,17 +36,18 @@ public class LibrosController : Controller
                 l.Categoria.Contains(termino));
         }
 
-        var libros = await consulta
+        var libros = consulta
             .OrderBy(l => l.Titulo)
-            .ToListAsync();
+            .ToList();
 
         ViewData["Buscar"] = buscar;
         return View(libros);
     }
 
-    public async Task<IActionResult> Detalle(int id)
+    public IActionResult Detalle(int id)
     {
-        var libro = await _context.Libros.FindAsync(id);
+        // Find() localiza el libro por su clave primaria.
+        var libro = _context.Libros.Find(id);
         if (libro is null)
         {
             return NotFound();
@@ -65,28 +65,29 @@ public class LibrosController : Controller
     // AGREGAR: registra un nuevo libro en la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Crear(Libro libro, IFormFile? imagen)
+    public IActionResult Crear(Libro libro, IFormFile? imagen)
     {
         if (!ModelState.IsValid)
         {
             return View(libro);
         }
 
-        libro.ImagenNombre = await GuardarImagenAsync(imagen) ?? ImagenPorDefecto;
+        libro.ImagenNombre = GuardarImagen(imagen) ?? ImagenPorDefecto;
 
-        // Add() marca la nueva entidad para inserción y SaveChangesAsync() confirma
+        // Add() marca la nueva entidad para inserción y SaveChanges() confirma
         // los cambios, ejecutando el INSERT correspondiente en SQL Server.
         _context.Libros.Add(libro);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
 
         TempData["Exito"] = $"El libro «{libro.Titulo}» se agregó correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public async Task<IActionResult> Editar(int id)
+    public IActionResult Editar(int id)
     {
-        var libro = await _context.Libros.FindAsync(id);
+        // Find() localiza el libro a editar y se envía al formulario.
+        var libro = _context.Libros.Find(id);
         if (libro is null)
         {
             return NotFound();
@@ -98,7 +99,7 @@ public class LibrosController : Controller
     // EDITAR: modifica un libro existente mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Editar(Libro libro, IFormFile? imagen)
+    public IActionResult Editar(Libro libro, IFormFile? imagen)
     {
         if (!ModelState.IsValid)
         {
@@ -106,7 +107,7 @@ public class LibrosController : Controller
         }
 
         // Find(): localiza el registro existente en la base de datos por su Id.
-        var libroActual = await _context.Libros.FindAsync(libro.Id);
+        var libroActual = _context.Libros.Find(libro.Id);
         if (libroActual is null)
         {
             return NotFound();
@@ -121,25 +122,26 @@ public class LibrosController : Controller
         libroActual.Descripcion = libro.Descripcion;
 
         // Si se subió una nueva portada se reemplaza; si no, se conserva la actual.
-        var nuevaImagen = await GuardarImagenAsync(imagen);
+        var nuevaImagen = GuardarImagen(imagen);
         if (nuevaImagen is not null)
         {
             libroActual.ImagenNombre = nuevaImagen;
         }
 
-        // Update() marca la entidad como modificada y SaveChangesAsync() guarda el
+        // Update() marca la entidad como modificada y SaveChanges() guarda el
         // UPDATE correspondiente en SQL Server.
         _context.Libros.Update(libroActual);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
 
         TempData["Exito"] = $"El libro «{libroActual.Titulo}» se actualizó correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
-    public async Task<IActionResult> Eliminar(int id)
+    public IActionResult Eliminar(int id)
     {
-        var libro = await _context.Libros.FindAsync(id);
+        // Find() localiza el libro a eliminar para mostrar la confirmación.
+        var libro = _context.Libros.Find(id);
         if (libro is null)
         {
             return NotFound();
@@ -151,15 +153,15 @@ public class LibrosController : Controller
     // ELIMINAR: quita un libro de la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EliminarConfirmado(int id)
+    public IActionResult EliminarConfirmado(int id)
     {
         // Find() localiza el registro, Remove() lo marca para borrado y
-        // SaveChangesAsync() ejecuta el DELETE en SQL Server.
-        var libro = await _context.Libros.FindAsync(id);
+        // SaveChanges() ejecuta el DELETE en SQL Server.
+        var libro = _context.Libros.Find(id);
         if (libro is not null)
         {
             _context.Libros.Remove(libro);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             TempData["Exito"] = $"El libro «{libro.Titulo}» se eliminó correctamente.";
         }
 
@@ -171,7 +173,7 @@ public class LibrosController : Controller
     /// ese nombre. Devuelve null si no se envió ningún archivo o si la extensión
     /// no está permitida, para que el llamador conserve la imagen previa.
     /// </summary>
-    private async Task<string?> GuardarImagenAsync(IFormFile? imagen)
+    private string? GuardarImagen(IFormFile? imagen)
     {
         if (imagen is null || imagen.Length == 0)
         {
@@ -191,7 +193,7 @@ public class LibrosController : Controller
         var ruta = Path.Combine(carpeta, nombreArchivo);
 
         using var stream = new FileStream(ruta, FileMode.Create);
-        await imagen.CopyToAsync(stream);
+        imagen.CopyTo(stream);
 
         return nombreArchivo;
     }
