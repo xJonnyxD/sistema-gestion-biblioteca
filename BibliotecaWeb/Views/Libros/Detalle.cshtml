@@ -36,7 +36,10 @@
             <dd class="col-sm-9">@Model.Descripcion</dd>
         </dl>
 
-        <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+            <a asp-action="Eliminar" asp-route-id="@Model.Id" class="btn btn-outline-danger">Eliminar</a>
+            <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+        </div>
     </div>
 </div>

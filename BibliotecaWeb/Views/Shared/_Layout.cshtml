@@ -32,6 +32,13 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Exito"] is string mensajeExito)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @mensajeExito
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

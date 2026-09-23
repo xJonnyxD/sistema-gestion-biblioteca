@@ -79,6 +79,7 @@ public class LibrosController : Controller
         _context.Libros.Add(libro);
         await _context.SaveChangesAsync();
 
+        TempData["Exito"] = $"El libro «{libro.Titulo}» se agregó correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -94,6 +95,7 @@ public class LibrosController : Controller
         return View(libro);
     }
 
+    // EDITAR: modifica un libro existente mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(Libro libro, IFormFile? imagen)
@@ -103,15 +105,34 @@ public class LibrosController : Controller
             return View(libro);
         }
 
+        // Find(): localiza el registro existente en la base de datos por su Id.
+        var libroActual = await _context.Libros.FindAsync(libro.Id);
+        if (libroActual is null)
+        {
+            return NotFound();
+        }
+
+        // Se actualizan los campos con los valores enviados desde el formulario.
+        libroActual.Titulo = libro.Titulo;
+        libroActual.Autor = libro.Autor;
+        libroActual.Categoria = libro.Categoria;
+        libroActual.AnioPublicacion = libro.AnioPublicacion;
+        libroActual.Disponibles = libro.Disponibles;
+        libroActual.Descripcion = libro.Descripcion;
+
+        // Si se subió una nueva portada se reemplaza; si no, se conserva la actual.
         var nuevaImagen = await GuardarImagenAsync(imagen);
         if (nuevaImagen is not null)
         {
-            libro.ImagenNombre = nuevaImagen;
+            libroActual.ImagenNombre = nuevaImagen;
         }
 
-        _context.Libros.Update(libro);
+        // Update() marca la entidad como modificada y SaveChangesAsync() guarda el
+        // UPDATE correspondiente en SQL Server.
+        _context.Libros.Update(libroActual);
         await _context.SaveChangesAsync();
 
+        TempData["Exito"] = $"El libro «{libroActual.Titulo}» se actualizó correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -127,15 +148,19 @@ public class LibrosController : Controller
         return View(libro);
     }
 
+    // ELIMINAR: quita un libro de la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EliminarConfirmado(int id)
     {
+        // Find() localiza el registro, Remove() lo marca para borrado y
+        // SaveChangesAsync() ejecuta el DELETE en SQL Server.
         var libro = await _context.Libros.FindAsync(id);
         if (libro is not null)
         {
             _context.Libros.Remove(libro);
             await _context.SaveChangesAsync();
+            TempData["Exito"] = $"El libro «{libro.Titulo}» se eliminó correctamente.";
         }
 
         return RedirectToAction(nameof(Index));
