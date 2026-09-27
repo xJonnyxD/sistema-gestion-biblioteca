@@ -642,6 +642,83 @@ img.rounded {
 }
 
 /* ==========================================================================
+   Autenticación (Login / Registro) — tarjeta centrada estilo Literal
+   ========================================================================== */
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-40) var(--spacing-16);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-hairline-gray);
+  border-radius: var(--radius-other);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.auth-card__head {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-card__mark {
+  display: inline-block;
+  color: var(--color-forest-green);
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.auth-card__title {
+  font-family: var(--font-libre-baskerville);
+  font-weight: 400;
+  color: var(--color-ink-black);
+  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+}
+
+.auth-card__lead {
+  color: var(--color-warm-gray);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.auth-card__foot {
+  text-align: center;
+  color: var(--color-warm-gray);
+  font-size: 0.9rem;
+  margin: 1.25rem 0 0;
+}
+
+/* Enlaces de sesión en la barra de navegación */
+.navbar-biblio .nav-usuario {
+  color: var(--color-charcoal);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.navbar-biblio .btn-logout {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-charcoal);
+  font: inherit;
+  cursor: pointer;
+}
+
+.navbar-biblio .btn-logout:hover {
+  color: var(--color-forest-green);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
    Página "Acerca de" — adaptada a Literal
    ========================================================================== */
 

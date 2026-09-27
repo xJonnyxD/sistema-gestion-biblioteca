@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BibliotecaWeb.Data;
 using BibliotecaWeb.Services;
@@ -11,6 +12,28 @@ builder.Services.AddControllersWithViews();
 // comunicarse con SQL Server usando la cadena de conexión "BibliotecaDB".
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BibliotecaDB")));
+
+// ASP.NET Core Identity: gestión de usuarios (IdentityUser) almacenados con
+// Entity Framework Core en el ApplicationDbContext. Habilita UserManager y
+// SignInManager para el registro, inicio y cierre de sesión.
+builder.Services
+    .AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+// Rutas de las páginas de autenticación (cookie de sesión).
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/Login";
+});
 
 // Inyección de Dependencias: se asocia la abstracción IAutorService con su
 // implementación AutorService, usando el ciclo de vida Scoped (una instancia por petición).
@@ -67,6 +90,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
