@@ -129,9 +129,8 @@ main h1 {
   align-items: center;
 }
 
-.navbar-biblio .navbar-brand__star {
-  color: var(--color-forest-green);
-  margin-left: 0.15rem;
+.navbar-biblio .navbar-brand__mark {
+  margin-right: 0.4rem;
   font-size: 1.1rem;
   line-height: 1;
 }
