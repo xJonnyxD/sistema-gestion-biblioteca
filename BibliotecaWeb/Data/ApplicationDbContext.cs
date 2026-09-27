@@ -1,13 +1,16 @@
 using BibliotecaWeb.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaWeb.Data;
 
 /// <summary>
-/// Contexto de Entity Framework Core. Representa la sesión con la base de datos
-/// SQL Server y expone cada entidad del dominio a través de su <see cref="DbSet{TEntity}"/>.
+/// Contexto de Entity Framework Core. Hereda de IdentityDbContext para integrar
+/// ASP.NET Core Identity (usuarios, roles y demás tablas de autenticación) junto
+/// con las entidades propias del dominio, expuestas a través de sus DbSet.
 /// </summary>
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

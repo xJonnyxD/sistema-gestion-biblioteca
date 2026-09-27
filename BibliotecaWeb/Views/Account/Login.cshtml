@@ -1,0 +1,45 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-card__head">
+            <span class="auth-card__mark">✳</span>
+            <h1 class="auth-card__title">Iniciar sesión</h1>
+            <p class="auth-card__lead">Ingresa a tu cuenta de la Biblioteca Virtual.</p>
+        </div>
+
+        <form asp-action="Login" method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 px-3" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="UsuarioOCorreo" class="form-label"></label>
+                <input asp-for="UsuarioOCorreo" class="form-control" autocomplete="username" autofocus />
+                <span asp-validation-for="UsuarioOCorreo" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="Recordarme" class="form-check-input" />
+                <label asp-for="Recordarme" class="form-check-label"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+        </form>
+
+        <p class="auth-card__foot">
+            ¿No tienes cuenta? <a asp-action="Register">Regístrate</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
