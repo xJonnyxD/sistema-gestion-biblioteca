@@ -10,7 +10,10 @@
         <h1 class="mb-1">Libros</h1>
         <p class="text-muted mb-0">Catálogo de libros de la biblioteca.</p>
     </div>
-    <a asp-action="Crear" class="btn btn-primary">Agregar libro</a>
+    @if (User.IsInRole("Administrador"))
+    {
+        <a asp-action="Crear" class="btn btn-primary">Agregar libro</a>
+    }
 </div>
 
 <form asp-action="Index" method="get" class="row g-2 align-items-center mb-3">
@@ -80,8 +83,11 @@ else
                         </p>
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Detalle" asp-route-id="@libro.Id" class="btn btn-sm btn-outline-secondary">Detalle</a>
-                            <a asp-action="Editar" asp-route-id="@libro.Id" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <a asp-action="Eliminar" asp-route-id="@libro.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <a asp-action="Editar" asp-route-id="@libro.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <a asp-action="Eliminar" asp-route-id="@libro.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            }
                         </div>
                     </div>
                 </div>

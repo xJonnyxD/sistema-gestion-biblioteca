@@ -32,7 +32,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccesoDenegado";
 });
 
 // Inyección de Dependencias: se asocia la abstracción IAutorService con su
@@ -71,6 +71,42 @@ using (var scope = app.Services.CreateScope())
             app.Logger.LogWarning("Base de datos no disponible (intento {Intento}): {Mensaje}", intento, ex.Message);
             Thread.Sleep(5000);
         }
+    }
+
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    foreach (var rol in new[] { "Administrador", "Lector" })
+    {
+        if (!await roleManager.RoleExistsAsync(rol))
+        {
+            await roleManager.CreateAsync(new IdentityRole(rol));
+        }
+    }
+
+    var correoAdmin = builder.Configuration["AdminSeed:Correo"] ?? "admin@biblioteca.local";
+    var usuarioAdmin = builder.Configuration["AdminSeed:Usuario"] ?? "admin";
+    var passwordAdmin = builder.Configuration["AdminSeed:Password"] ?? "Admin123";
+
+    var admin = await userManager.FindByNameAsync(usuarioAdmin);
+    if (admin is null)
+    {
+        admin = new IdentityUser
+        {
+            UserName = usuarioAdmin,
+            Email = correoAdmin,
+            EmailConfirmed = true
+        };
+
+        var creado = await userManager.CreateAsync(admin, passwordAdmin);
+        if (creado.Succeeded)
+        {
+            await userManager.AddToRoleAsync(admin, "Administrador");
+        }
+    }
+    else if (!await userManager.IsInRoleAsync(admin, "Administrador"))
+    {
+        await userManager.AddToRoleAsync(admin, "Administrador");
     }
 }
 
