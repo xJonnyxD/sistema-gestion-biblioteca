@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Acceso denegado";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-card__head">
+            <span class="auth-card__mark">🔒</span>
+            <h1 class="auth-card__title">Acceso denegado</h1>
+            <p class="auth-card__lead">Tu cuenta no tiene permisos para realizar esta operación.</p>
+        </div>
+
+        <div class="alert alert-warning py-2 px-3 small" role="alert">
+            Si consideras que deberías tener acceso, contacta al administrador de la biblioteca.
+        </div>
+
+        <div class="d-grid gap-2">
+            <a asp-controller="Libros" asp-action="Index" class="btn btn-primary">Volver al catálogo</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Ir al inicio</a>
+        </div>
+    </div>
+</div>

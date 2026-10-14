@@ -46,6 +46,8 @@ public class AccountController : Controller
         var resultado = await _userManager.CreateAsync(usuario, modelo.Password);
         if (resultado.Succeeded)
         {
+            await _userManager.AddToRoleAsync(usuario, "Lector");
+
             // Inicia sesión automáticamente tras un registro correcto.
             await _signInManager.SignInAsync(usuario, isPersistent: false);
             TempData["Exito"] = $"¡Bienvenido, {usuario.UserName}! Tu cuenta se creó correctamente.";
@@ -119,5 +121,13 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         TempData["Exito"] = "Sesión cerrada correctamente.";
         return RedirectToAction("Index", "Home");
+    }
+
+    // ACCESO DENEGADO -------------------------------------------------------
+
+    [HttpGet]
+    public IActionResult AccesoDenegado()
+    {
+        return View();
     }
 }
