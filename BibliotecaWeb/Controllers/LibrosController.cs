@@ -59,7 +59,7 @@ public class LibrosController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult Crear()
     {
         return View(new Libro());
@@ -68,7 +68,7 @@ public class LibrosController : Controller
     // AGREGAR: registra un nuevo libro en la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult Crear(Libro libro, IFormFile? imagen)
     {
         if (!ModelState.IsValid)
@@ -88,7 +88,7 @@ public class LibrosController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult Editar(int id)
     {
         // Find() localiza el libro a editar y se envía al formulario.
@@ -104,7 +104,7 @@ public class LibrosController : Controller
     // EDITAR: modifica un libro existente mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult Editar(Libro libro, IFormFile? imagen)
     {
         if (!ModelState.IsValid)
@@ -144,7 +144,7 @@ public class LibrosController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult Eliminar(int id)
     {
         // Find() localiza el libro a eliminar para mostrar la confirmación.
@@ -160,7 +160,7 @@ public class LibrosController : Controller
     // ELIMINAR: quita un libro de la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Admin,Bibliotecario")]
     public IActionResult EliminarConfirmado(int id)
     {
         // Find() localiza el registro, Remove() lo marca para borrado y

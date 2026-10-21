@@ -76,7 +76,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-    foreach (var rol in new[] { "Administrador", "Lector" })
+    foreach (var rol in new[] { "Admin", "Bibliotecario", "Usuario" })
     {
         if (!await roleManager.RoleExistsAsync(rol))
         {
@@ -101,12 +101,12 @@ using (var scope = app.Services.CreateScope())
         var creado = await userManager.CreateAsync(admin, passwordAdmin);
         if (creado.Succeeded)
         {
-            await userManager.AddToRoleAsync(admin, "Administrador");
+            await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
-    else if (!await userManager.IsInRoleAsync(admin, "Administrador"))
+    else if (!await userManager.IsInRoleAsync(admin, "Admin"))
     {
-        await userManager.AddToRoleAsync(admin, "Administrador");
+        await userManager.AddToRoleAsync(admin, "Admin");
     }
 }
 
