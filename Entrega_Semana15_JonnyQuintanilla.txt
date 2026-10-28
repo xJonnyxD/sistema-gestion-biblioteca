@@ -1,0 +1,80 @@
+================================================================================
+  PROGRAMACIÓN WEB II - SEMANA 15
+  Logging y Manejo de Errores - BibliotecaMVC
+  Jonny Quintanilla | 28 de octubre de 2026
+  Repositorio: https://github.com/xJonnyxD/sistema-gestion-biblioteca (main)
+================================================================================
+
+
+ACTIVIDAD 1: LOGGING EN CONTROLADORES
+================================================================================
+
+1. LibrosController
+   - Se inyectó ILogger<LibrosController> en el constructor.
+   - LogInformation en Index, Detalle, Crear, Editar, Eliminar
+     (registra inicio y resultado de cada operación).
+   - LogWarning cuando un libro no se encuentra por Id y cuando
+     el ModelState es inválido.
+   - LogError en bloques try-catch de Crear, Editar y EliminarConfirmado.
+
+2. CategoriasController
+   - Se inyectó ILogger<CategoriasController> en el constructor.
+   - LogInformation en Index, Detalle, Crear, Editar, Eliminar.
+   - LogWarning cuando una categoría no se encuentra y modelo inválido.
+   - LogError en try-catch de Index al cargar las categorías.
+
+3. Datos sensibles
+   - No se registran contraseñas, tokens ni cadenas de conexión.
+   - Solo se loguean títulos, nombres e identificadores de los recursos.
+
+4. Configuración (appsettings.json)
+   - Default: Information | Microsoft.AspNetCore: Warning
+
+
+ACTIVIDAD 2: MANEJO DE ERRORES Y AUTORIZACIÓN
+================================================================================
+
+1. Página de error (Views/Shared/Error.cshtml)
+   - Muestra mensaje genérico con RequestId de referencia.
+   - No expone stack traces ni información interna.
+
+2. Middleware
+   - UseExceptionHandler("/Home/Error") en Program.cs, fuera del bloque
+     condicional de entorno: aplica en desarrollo y producción.
+
+3. Acceso denegado (Views/Account/AccesoDenegado.cshtml)
+   - AccessDeniedPath configurado en Program.cs.
+   - Mensaje genérico sin exponer detalles del sistema.
+
+4. CRUD
+   - Libros: Index, Detalle, Crear, Editar, Eliminar (EF Core + SQL Server).
+   - Categorías: Index, Detalle, Crear, Editar, Eliminar (datos en memoria).
+   - Todas las acciones POST protegidas con [ValidateAntiForgeryToken].
+
+5. Autorización por roles
+   - Roles: Administrador (CRUD completo) y Lector (solo lectura).
+   - [Authorize(Roles = "Administrador")] en acciones de escritura.
+   - Vistas ocultan botones de Crear/Editar/Eliminar según el rol.
+   - Menú de navegación muestra Usuarios y Préstamos solo para Administrador.
+
+6. Autenticación Identity
+   - Registro, Login y Logout funcionan correctamente.
+   - Nuevo usuario recibe el rol Lector automáticamente.
+   - Usuario admin por defecto creado en el seed de Program.cs.
+
+
+ARCHIVOS MODIFICADOS
+================================================================================
+  Controllers/LibrosController.cs      - Logging + roles corregidos
+  Controllers/CategoriasController.cs  - CRUD completo + logging
+  Controllers/AccountController.cs     - Rol de registro corregido a Lector
+  Program.cs                           - UseExceptionHandler global
+  Views/Libros/Index.cshtml            - Roles corregidos
+  Views/Libros/Detalle.cshtml          - Roles corregidos
+  Views/Categorias/Index.cshtml        - Botones por rol
+  Views/Categorias/Detalle.cshtml      - Nueva vista
+  Views/Categorias/Crear.cshtml        - Nueva vista
+  Views/Categorias/Editar.cshtml       - Nueva vista
+  Views/Categorias/Eliminar.cshtml     - Nueva vista
+  Views/Shared/_MenuPrincipal.cshtml   - Roles corregidos
+  Views/Account/AccesoDenegado.cshtml  - Mensaje genérico
