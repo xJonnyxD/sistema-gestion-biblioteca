@@ -76,7 +76,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-    foreach (var rol in new[] { "Admin", "Bibliotecario", "Usuario" })
+    foreach (var rol in new[] { "Administrador", "Lector" })
     {
         if (!await roleManager.RoleExistsAsync(rol))
         {
@@ -101,20 +101,21 @@ using (var scope = app.Services.CreateScope())
         var creado = await userManager.CreateAsync(admin, passwordAdmin);
         if (creado.Succeeded)
         {
-            await userManager.AddToRoleAsync(admin, "Admin");
+            await userManager.AddToRoleAsync(admin, "Administrador");
         }
     }
-    else if (!await userManager.IsInRoleAsync(admin, "Admin"))
+    else if (!await userManager.IsInRoleAsync(admin, "Administrador"))
     {
-        await userManager.AddToRoleAsync(admin, "Admin");
+        await userManager.AddToRoleAsync(admin, "Administrador");
     }
 }
 
 app.UseForwardedHeaders();
 
+app.UseExceptionHandler("/Home/Error");
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
