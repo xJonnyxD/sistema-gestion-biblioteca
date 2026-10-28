@@ -46,7 +46,7 @@ public class AccountController : Controller
         var resultado = await _userManager.CreateAsync(usuario, modelo.Password);
         if (resultado.Succeeded)
         {
-            await _userManager.AddToRoleAsync(usuario, "Usuario");
+            await _userManager.AddToRoleAsync(usuario, "Lector");
 
             // Inicia sesión automáticamente tras un registro correcto.
             await _signInManager.SignInAsync(usuario, isPersistent: false);

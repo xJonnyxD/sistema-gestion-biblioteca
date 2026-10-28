@@ -13,20 +13,19 @@ public class LibrosController : Controller
 
     private readonly ApplicationDbContext _context;
     private readonly IWebHostEnvironment _entorno;
+    private readonly ILogger<LibrosController> _logger;
 
-    // El controlador recibe el DbContext por inyección de dependencias. A través de él
-    // realiza todas las operaciones contra la base de datos usando Entity Framework Core.
-    public LibrosController(ApplicationDbContext context, IWebHostEnvironment entorno)
+    public LibrosController(ApplicationDbContext context, IWebHostEnvironment entorno, ILogger<LibrosController> logger)
     {
         _context = context;
         _entorno = entorno;
+        _logger = logger;
     }
 
-    // MOSTRAR: consulta los libros almacenados en la base de datos. Si se recibe un
-    // término de búsqueda, filtra por título, autor o categoría directamente en la
-    // consulta (Entity Framework Core lo traduce a un WHERE ... LIKE en SQL Server).
     public IActionResult Index(string? buscar)
     {
+        _logger.LogInformation("Consultando listado de libros. Término de búsqueda: {Buscar}", buscar ?? "(ninguno)");
+
         var consulta = _context.Libros.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(buscar))
@@ -42,145 +41,179 @@ public class LibrosController : Controller
             .OrderBy(l => l.Titulo)
             .ToList();
 
+        _logger.LogInformation("Se encontraron {Cantidad} libro(s) en la consulta.", libros.Count);
+
         ViewData["Buscar"] = buscar;
         return View(libros);
     }
 
     public IActionResult Detalle(int id)
     {
-        // Find() localiza el libro por su clave primaria.
+        _logger.LogInformation("Consultando detalle del libro con Id {LibroId}.", id);
+
         var libro = _context.Libros.Find(id);
         if (libro is null)
         {
+            _logger.LogWarning("No se encontró el libro con Id {LibroId}.", id);
             return NotFound();
         }
 
+        _logger.LogInformation("Mostrando detalle del libro «{Titulo}» (Id: {LibroId}).", libro.Titulo, libro.Id);
         return View(libro);
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult Crear()
     {
+        _logger.LogInformation("Accediendo al formulario de creación de libro.");
         return View(new Libro());
     }
 
-    // AGREGAR: registra un nuevo libro en la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult Crear(Libro libro, IFormFile? imagen)
     {
+        _logger.LogInformation("Iniciando creación de libro «{Titulo}».", libro.Titulo);
+
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Modelo inválido al intentar crear libro «{Titulo}».", libro.Titulo);
             return View(libro);
         }
 
-        libro.ImagenNombre = GuardarImagen(imagen) ?? ImagenPorDefecto;
+        try
+        {
+            libro.ImagenNombre = GuardarImagen(imagen) ?? ImagenPorDefecto;
 
-        // Add() marca la nueva entidad para inserción y SaveChanges() confirma
-        // los cambios, ejecutando el INSERT correspondiente en SQL Server.
-        _context.Libros.Add(libro);
-        _context.SaveChanges();
+            _context.Libros.Add(libro);
+            _context.SaveChanges();
 
-        TempData["Exito"] = $"El libro «{libro.Titulo}» se agregó correctamente.";
-        return RedirectToAction(nameof(Index));
+            _logger.LogInformation("Libro «{Titulo}» creado exitosamente con Id {LibroId}.", libro.Titulo, libro.Id);
+            TempData["Exito"] = $"El libro «{libro.Titulo}» se agregó correctamente.";
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al crear el libro «{Titulo}».", libro.Titulo);
+            TempData["Error"] = "Ocurrió un error al guardar el libro. Intente nuevamente.";
+            return View(libro);
+        }
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult Editar(int id)
     {
-        // Find() localiza el libro a editar y se envía al formulario.
+        _logger.LogInformation("Accediendo al formulario de edición del libro con Id {LibroId}.", id);
+
         var libro = _context.Libros.Find(id);
         if (libro is null)
         {
+            _logger.LogWarning("No se encontró el libro con Id {LibroId} para editar.", id);
             return NotFound();
         }
 
         return View(libro);
     }
 
-    // EDITAR: modifica un libro existente mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult Editar(Libro libro, IFormFile? imagen)
     {
+        _logger.LogInformation("Iniciando edición del libro con Id {LibroId}.", libro.Id);
+
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("Modelo inválido al intentar editar libro con Id {LibroId}.", libro.Id);
             return View(libro);
         }
 
-        // Find(): localiza el registro existente en la base de datos por su Id.
         var libroActual = _context.Libros.Find(libro.Id);
         if (libroActual is null)
         {
+            _logger.LogWarning("No se encontró el libro con Id {LibroId} en la base de datos al editar.", libro.Id);
             return NotFound();
         }
 
-        // Se actualizan los campos con los valores enviados desde el formulario.
-        libroActual.Titulo = libro.Titulo;
-        libroActual.Autor = libro.Autor;
-        libroActual.Categoria = libro.Categoria;
-        libroActual.AnioPublicacion = libro.AnioPublicacion;
-        libroActual.Disponibles = libro.Disponibles;
-        libroActual.Descripcion = libro.Descripcion;
-
-        // Si se subió una nueva portada se reemplaza; si no, se conserva la actual.
-        var nuevaImagen = GuardarImagen(imagen);
-        if (nuevaImagen is not null)
+        try
         {
-            libroActual.ImagenNombre = nuevaImagen;
+            libroActual.Titulo = libro.Titulo;
+            libroActual.Autor = libro.Autor;
+            libroActual.Categoria = libro.Categoria;
+            libroActual.AnioPublicacion = libro.AnioPublicacion;
+            libroActual.Disponibles = libro.Disponibles;
+            libroActual.Descripcion = libro.Descripcion;
+
+            var nuevaImagen = GuardarImagen(imagen);
+            if (nuevaImagen is not null)
+            {
+                libroActual.ImagenNombre = nuevaImagen;
+            }
+
+            _context.Libros.Update(libroActual);
+            _context.SaveChanges();
+
+            _logger.LogInformation("Libro «{Titulo}» (Id: {LibroId}) actualizado exitosamente.", libroActual.Titulo, libroActual.Id);
+            TempData["Exito"] = $"El libro «{libroActual.Titulo}» se actualizó correctamente.";
+            return RedirectToAction(nameof(Index));
         }
-
-        // Update() marca la entidad como modificada y SaveChanges() guarda el
-        // UPDATE correspondiente en SQL Server.
-        _context.Libros.Update(libroActual);
-        _context.SaveChanges();
-
-        TempData["Exito"] = $"El libro «{libroActual.Titulo}» se actualizó correctamente.";
-        return RedirectToAction(nameof(Index));
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al actualizar el libro con Id {LibroId}.", libro.Id);
+            TempData["Error"] = "Ocurrió un error al actualizar el libro. Intente nuevamente.";
+            return View(libro);
+        }
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult Eliminar(int id)
     {
-        // Find() localiza el libro a eliminar para mostrar la confirmación.
+        _logger.LogInformation("Accediendo a confirmación de eliminación del libro con Id {LibroId}.", id);
+
         var libro = _context.Libros.Find(id);
         if (libro is null)
         {
+            _logger.LogWarning("No se encontró el libro con Id {LibroId} para eliminar.", id);
             return NotFound();
         }
 
         return View(libro);
     }
 
-    // ELIMINAR: quita un libro de la base de datos mediante Entity Framework Core.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Bibliotecario")]
+    [Authorize(Roles = "Administrador")]
     public IActionResult EliminarConfirmado(int id)
     {
-        // Find() localiza el registro, Remove() lo marca para borrado y
-        // SaveChanges() ejecuta el DELETE en SQL Server.
+        _logger.LogInformation("Iniciando eliminación del libro con Id {LibroId}.", id);
+
         var libro = _context.Libros.Find(id);
-        if (libro is not null)
+        if (libro is null)
+        {
+            _logger.LogWarning("No se encontró el libro con Id {LibroId} al confirmar eliminación.", id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        try
         {
             _context.Libros.Remove(libro);
             _context.SaveChanges();
+            _logger.LogInformation("Libro «{Titulo}» (Id: {LibroId}) eliminado exitosamente.", libro.Titulo, libro.Id);
             TempData["Exito"] = $"El libro «{libro.Titulo}» se eliminó correctamente.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al eliminar el libro «{Titulo}» (Id: {LibroId}).", libro.Titulo, libro.Id);
+            TempData["Error"] = "Ocurrió un error al eliminar el libro. Intente nuevamente.";
         }
 
         return RedirectToAction(nameof(Index));
     }
 
-    /// <summary>
-    /// Guarda la imagen recibida en wwwroot/images con un nombre único y devuelve
-    /// ese nombre. Devuelve null si no se envió ningún archivo o si la extensión
-    /// no está permitida, para que el llamador conserve la imagen previa.
-    /// </summary>
     private string? GuardarImagen(IFormFile? imagen)
     {
         if (imagen is null || imagen.Length == 0)

@@ -11,7 +11,7 @@
     <li class="nav-item">
         <a class="nav-link" asp-area="" asp-controller="Categorias" asp-action="Index">Categorías</a>
     </li>
-    @if (User.IsInRole("Admin") || User.IsInRole("Bibliotecario"))
+    @if (User.IsInRole("Administrador"))
     {
         <li class="nav-item">
             <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
