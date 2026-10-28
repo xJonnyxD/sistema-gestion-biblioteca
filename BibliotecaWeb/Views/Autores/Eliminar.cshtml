@@ -1,0 +1,39 @@
+@model Autor
+@{
+    ViewData["Title"] = "Eliminar autor";
+}
+
+<h1 class="mb-3">Eliminar autor</h1>
+
+<div class="alert alert-danger">
+    ¿Está seguro de que desea eliminar este autor? Esta acción no se puede deshacer.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre @Model.Apellido</dd>
+
+    <dt class="col-sm-3">Nacionalidad</dt>
+    <dd class="col-sm-9">@Model.Nacionalidad</dd>
+
+    <dt class="col-sm-3">Fecha de nacimiento</dt>
+    <dd class="col-sm-9">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">
+        @if (Model.Activo)
+        {
+            <span class="badge bg-success">Activo</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Inactivo</span>
+        }
+    </dd>
+</dl>
+
+<form asp-action="EliminarConfirmado" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,30 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-card__head">
+            <span class="auth-card__mark">⚠️</span>
+            <h1 class="auth-card__title">Ha ocurrido un error</h1>
+            <p class="auth-card__lead">Lo sentimos, algo salió mal al procesar tu solicitud.</p>
+        </div>
+
+        <div class="alert alert-danger py-2 px-3 small" role="alert">
+            Si el problema persiste, contacta al administrador de la biblioteca.
+        </div>
+
+        @if (Model.ShowRequestId)
+        {
+            <p class="text-muted small text-center mb-3">
+                <strong>Referencia:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
+
+        <div class="d-grid gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al inicio</a>
+            <a asp-controller="Libros" asp-action="Index" class="btn btn-outline-secondary">Ir al catálogo</a>
+        </div>
+    </div>
+</div>
