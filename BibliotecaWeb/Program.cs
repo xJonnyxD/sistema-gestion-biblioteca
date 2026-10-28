@@ -112,9 +112,10 @@ using (var scope = app.Services.CreateScope())
 
 app.UseForwardedHeaders();
 
+app.UseExceptionHandler("/Home/Error");
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
