@@ -1,0 +1,157 @@
+================================================================================
+  PROGRAMACIÓN WEB II - SEMANA 15
+  Verificación de Actividades - BibliotecaMVC
+  Jonny Quintanilla
+================================================================================
+
+ACTIVIDAD 1: IMPLEMENTACIÓN DE LOGGING EN CONTROLADORES
+================================================================================
+
+1.1 LibrosController - Inyección de ILogger<LibrosController>
+--------------------------------------------------------------------------------
+- Se inyectó ILogger<LibrosController> en el constructor junto con
+  ApplicationDbContext e IWebHostEnvironment.
+- El campo privado _logger almacena la referencia al logger.
+
+1.2 LibrosController - Niveles de Log Implementados
+--------------------------------------------------------------------------------
+LogInformation:
+  - Index: registra inicio de consulta y cantidad de resultados.
+  - Detalle: registra consulta de libro por Id.
+  - Crear (GET): registra apertura del formulario.
+  - Crear (POST): registra creación exitosa con título del libro.
+  - Editar (GET): registra apertura del formulario de edición.
+  - Editar (POST): registra actualización exitosa con Id y título.
+  - Eliminar (GET): registra solicitud de confirmación de eliminación.
+  - EliminarConfirmado: registra eliminación exitosa con Id y título.
+
+LogWarning:
+  - Detalle: cuando el libro solicitado no existe (Id no encontrado).
+  - Crear (POST): cuando el ModelState es inválido.
+  - Editar (GET): cuando el libro a editar no existe.
+  - Editar (POST): cuando el ModelState es inválido o el libro no existe.
+  - Eliminar: cuando el libro a eliminar no existe.
+  - EliminarConfirmado: cuando el libro ya no existe al confirmar.
+
+LogError:
+  - Crear (POST): captura excepciones en try-catch al guardar.
+  - Editar (POST): captura excepciones en try-catch al actualizar.
+  - EliminarConfirmado: captura excepciones en try-catch al eliminar.
+
+1.3 CategoriasController - Inyección de ILogger<CategoriasController>
+--------------------------------------------------------------------------------
+- Se inyectó ILogger<CategoriasController> en el constructor.
+- El campo privado _logger almacena la referencia al logger.
+
+1.4 CategoriasController - Niveles de Log Implementados
+--------------------------------------------------------------------------------
+LogInformation:
+  - Index: registra inicio de consulta y cantidad de categorías.
+  - Detalle: registra consulta de categoría por Id.
+  - Crear (GET): registra apertura del formulario.
+  - Crear (POST): registra creación exitosa con nombre de categoría.
+  - Editar (GET): registra apertura del formulario de edición.
+  - Editar (POST): registra actualización exitosa con Id y nombre.
+  - Eliminar (GET): registra solicitud de confirmación.
+  - EliminarConfirmado: registra eliminación exitosa con Id y nombre.
+
+LogWarning:
+  - Detalle: cuando la categoría no existe.
+  - Crear (POST): cuando el ModelState es inválido.
+  - Editar (GET): cuando la categoría a editar no existe.
+  - Editar (POST): cuando el ModelState es inválido o no existe.
+  - Eliminar: cuando la categoría a eliminar no existe.
+  - EliminarConfirmado: cuando la categoría ya no existe al confirmar.
+
+LogError:
+  - Index: captura excepciones al cargar la lista de categorías.
+
+1.5 Mensajes Descriptivos y Sin Datos Sensibles
+--------------------------------------------------------------------------------
+- Los mensajes incluyen nombre de la operación, título/nombre e Id del recurso.
+- No se registran contraseñas, tokens, cadenas de conexión ni datos personales.
+
+1.6 Configuración de Logging (appsettings.json)
+--------------------------------------------------------------------------------
+- Default: Information
+- Microsoft.AspNetCore: Warning
+- Los logs se muestran en consola al ejecutar la aplicación.
+
+
+ACTIVIDAD 2: VERIFICACIÓN DE MANEJO DE ERRORES Y AUTORIZACIÓN
+================================================================================
+
+2.1 Página de Error Personalizada (Error.cshtml)
+--------------------------------------------------------------------------------
+- Ubicación: Views/Shared/Error.cshtml
+- Muestra un mensaje genérico al usuario sin exponer detalles técnicos.
+- Incluye el RequestId como referencia para soporte técnico.
+- No muestra stack traces, nombres de archivos ni información interna.
+
+2.2 Middleware UseExceptionHandler
+--------------------------------------------------------------------------------
+- Configurado en Program.cs: app.UseExceptionHandler("/Home/Error")
+- Se aplica en TODOS los entornos (desarrollo y producción), no solo
+  dentro del bloque if (!app.Environment.IsDevelopment()).
+- Las excepciones no controladas redirigen a la página de error personalizada.
+
+2.3 Página de Acceso Denegado (AccesoDenegado.cshtml)
+--------------------------------------------------------------------------------
+- Ubicación: Views/Account/AccesoDenegado.cshtml
+- Se muestra cuando un usuario intenta acceder a un recurso sin permisos.
+- Mensaje genérico: "Tu cuenta no tiene permisos para realizar esta operación."
+- Incluye enlaces para volver al catálogo o al inicio.
+
+2.4 Operaciones CRUD Funcionando
+--------------------------------------------------------------------------------
+Libros:
+  - Index: lista todos los libros con búsqueda.
+  - Detalle: muestra información completa del libro.
+  - Crear: formulario con validación y subida de imagen.
+  - Editar: formulario precargado con datos actuales.
+  - Eliminar: confirmación antes de borrar.
+
+Categorías:
+  - Index: lista todas las categorías.
+  - Detalle: muestra información de la categoría.
+  - Crear: formulario con validación.
+  - Editar: formulario precargado.
+  - Eliminar: confirmación antes de borrar.
+
+2.5 Autorización por Roles
+--------------------------------------------------------------------------------
+Roles del sistema (definidos en Program.cs):
+  - Administrador: acceso completo (CRUD en Libros, Categorías, Usuarios, Préstamos).
+  - Lector: acceso de solo lectura (consultar libros y categorías).
+
+Protección implementada:
+  - [Authorize(Roles = "Administrador")] en acciones de escritura (Crear, Editar,
+    Eliminar) en LibrosController y CategoriasController.
+  - [ValidateAntiForgeryToken] en todas las acciones POST.
+  - Las vistas ocultan botones de Crear/Editar/Eliminar para usuarios sin rol
+    Administrador usando User.IsInRole("Administrador").
+  - El menú de navegación muestra Usuarios y Préstamos solo para Administrador.
+
+2.6 Autenticación Identity
+--------------------------------------------------------------------------------
+- ASP.NET Core Identity configurado con IdentityUser e IdentityRole.
+- Registro: asigna automáticamente el rol "Lector" al nuevo usuario.
+- Login: permite ingresar con usuario o correo electrónico.
+- Logout: cierra la sesión y redirige al inicio.
+- Usuario administrador por defecto: admin / Admin123 (creado en el seed).
+
+2.7 Verificación Manual Pendiente
+--------------------------------------------------------------------------------
+Para completar la actividad, ejecutar en Visual Studio:
+  1. Ejecutar la aplicación (F5 o Ctrl+F5).
+  2. Iniciar sesión como admin / Admin123.
+  3. Realizar operaciones CRUD en Libros y Categorías.
+  4. Verificar en la consola de salida los mensajes de log.
+  5. Cerrar sesión e iniciar como un usuario Lector.
+  6. Verificar que los botones Crear/Editar/Eliminar no aparecen.
+  7. Intentar acceder directamente a /Libros/Crear y verificar redirección
+     a la página de acceso denegado.
+
+================================================================================
+  FIN DEL DOCUMENTO
+================================================================================
