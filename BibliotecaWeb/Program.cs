@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Inyección de Dependencias: se asocia la abstracción IAutorService con su
 // implementación AutorService, usando el ciclo de vida Scoped (una instancia por petición).
 builder.Services.AddScoped<IAutorService, AutorService>();
+builder.Services.AddScoped<ILibroService, LibroService>();
 
 // Reto (SOLID / IoC / DI): para usar la segunda implementación basta con cambiar
 // la línea anterior por la siguiente. El AutoresController no requiere modificación.
