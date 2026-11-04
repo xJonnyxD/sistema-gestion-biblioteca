@@ -1,0 +1,172 @@
+================================================================================
+  PROGRAMACIÓN WEB II - SEMANA 16
+  Pruebas Unitarias - Módulo Libros (BibliotecaMVC)
+  Jonny Quintanilla | 3 de noviembre de 2026
+  Repositorio: https://github.com/xJonnyxD/sistema-gestion-biblioteca (main)
+================================================================================
+
+
+ACTIVIDAD 1: CONFIGURACIÓN DEL PROYECTO DE PRUEBAS
+================================================================================
+
+Proyecto: BibliotecaWeb.Tests (dentro de la solución BibliotecaMVC.sln)
+Framework: xUnit 2.9.3
+Mocking: Moq 4.20.72
+Target: net10.0
+
+Estructura:
+  BibliotecaWeb.Tests/
+    EntornoTests.cs          - Prueba inicial de verificación del entorno
+    LibroModelTests.cs       - Pruebas del modelo Libro
+    LibroServiceTests.cs     - Pruebas del controlador con mocks de ILibroService
+
+Referencia al proyecto principal configurada en el .csproj.
+Prueba inicial (EntornoTests.EntornoDePruebas_Funciona) verifica que el
+entorno compila y ejecuta correctamente.
+
+
+ACTIVIDAD 2: PRUEBAS UNITARIAS DEL MÓDULO LIBROS
+================================================================================
+
+Se creó la interfaz ILibroService como límite de prueba para aislar la lógica
+del controlador del acceso directo a Entity Framework Core, siguiendo el mismo
+patrón que ya existía con IAutorService/AutorService.
+
+Archivos creados en el proyecto principal:
+  Services/ILibroService.cs  - Interfaz con: ObtenerTodos, Buscar,
+                                ObtenerPorId, Crear, Actualizar, Eliminar
+  Services/LibroService.cs   - Implementación que envuelve ApplicationDbContext
+
+LibrosController ahora depende de ILibroService en lugar de ApplicationDbContext
+directamente, lo que permite inyectar un mock en las pruebas.
+
+Casos de prueba implementados (25 pruebas):
+
+CONSULTA (Index):
+  - Index sin búsqueda devuelve todos los libros.
+  - Index con término de búsqueda usa el método Buscar.
+  - Index sin resultados devuelve lista vacía.
+
+DETALLE (ObtenerPorId):
+  - Detalle con libro existente devuelve la vista con el libro.
+  - Detalle con libro inexistente devuelve NotFound.
+  - Detalle con diferentes Ids válidos (Theory: 1, 5, 100).
+  - Detalle con Ids inexistentes (Theory: -1, 0, 99999).
+
+REGISTRO (Crear):
+  - Crear GET devuelve vista con libro nuevo.
+  - Crear POST con datos válidos redirige a Index y llama al servicio.
+  - Crear POST con modelo inválido devuelve la vista sin llamar al servicio.
+  - Crear POST con excepción del servicio devuelve vista con mensaje de error.
+
+EDICIÓN (Actualizar):
+  - Editar GET con libro existente devuelve la vista.
+  - Editar GET con libro inexistente devuelve NotFound.
+  - Editar POST con datos válidos redirige a Index.
+  - Editar POST con libro que no existe en BD devuelve NotFound.
+  - Editar POST con modelo inválido no llama al servicio.
+
+ELIMINACIÓN (Eliminar):
+  - Eliminar GET con libro existente devuelve vista de confirmación.
+  - Eliminar GET con libro inexistente devuelve NotFound.
+  - EliminarConfirmado con libro existente elimina y redirige.
+  - EliminarConfirmado con libro inexistente redirige a Index.
+  - EliminarConfirmado con excepción redirige con mensaje de error.
+
+MODELO (Libro):
+  - HayDisponibles con stock > 0 devuelve true.
+  - HayDisponibles con stock = 0 devuelve false.
+  - ImagenNombre por defecto es "sin-imagen.svg".
+  - Titulo por defecto es cadena vacía.
+  - HayDisponibles con diferentes cantidades (Theory: 1, 10, 99999).
+
+
+ACTIVIDAD 3: ASERCIONES UTILIZADAS
+================================================================================
+
+  Assert.Equal()     - Comparar valores (títulos, Ids, nombres de acción).
+  Assert.True()      - Verificar HayDisponibles cuando hay stock.
+  Assert.False()     - Verificar HayDisponibles cuando no hay stock.
+  Assert.Empty()     - Verificar que la búsqueda sin resultados devuelve lista vacía.
+  Assert.NotNull()   - Verificar que los resultados de las acciones no sean nulos.
+  Assert.Single()    - Verificar que una búsqueda devuelve exactamente un resultado.
+  Assert.IsType<T>() - Verificar el tipo de resultado (ViewResult, NotFoundResult,
+                        RedirectToActionResult, Libro).
+  Assert.IsAssignableFrom<T>() - Verificar que el modelo es del tipo esperado.
+
+Cada prueba tiene un nombre descriptivo que indica el escenario y el resultado
+esperado, siguiendo la convención Método_Escenario_ResultadoEsperado.
+
+
+ACTIVIDAD 4: USO DE MOCKS
+================================================================================
+
+Dependencias simuladas con Moq:
+  - Mock<ILibroService>: simula todas las operaciones CRUD.
+  - Mock<IWebHostEnvironment>: simula el entorno de hosting.
+  - Mock<ILogger<LibrosController>>: simula el logger.
+
+Configuraciones utilizadas:
+  - Setup() + Returns(): para definir los datos que devuelve cada método.
+    Ejemplo: _mockService.Setup(s => s.ObtenerPorId(1)).Returns(libro);
+
+  - Verify(): para comprobar que el servicio fue invocado correctamente.
+    Ejemplo: _mockService.Verify(s => s.Crear(libro), Times.Once);
+    Ejemplo: _mockService.Verify(s => s.Crear(It.IsAny<Libro>()), Times.Never);
+
+  - Throws(): para simular excepciones del servicio.
+    Ejemplo: _mockService.Setup(s => s.Crear(...)).Throws(new Exception(...));
+
+Las pruebas no dependen de base de datos real ni de servicios externos.
+Son repetibles y pueden ejecutarse en cualquier orden.
+
+
+ACTIVIDAD 5 (RETO): ESCENARIOS ADICIONALES
+================================================================================
+
+Escenarios con [Theory]:
+  - Detalle con diferentes Ids válidos (1, 5, 100).
+  - Detalle con Ids inexistentes o inválidos (-1, 0, 99999).
+  - HayDisponibles con diferentes cantidades (1, 10, 99999).
+
+Escenarios de datos inválidos:
+  - ModelState inválido en Crear y Editar (no llama al servicio).
+  - Libro inexistente en Editar POST (Actualizar devuelve false).
+
+Escenarios de excepciones:
+  - Servicio lanza excepción en Crear POST → mensaje de error en TempData.
+  - Servicio lanza excepción en EliminarConfirmado → mensaje de error.
+
+Tipos de pruebas (reconocimiento):
+  - Unitarias: las implementadas en este proyecto, verifican métodos aislados
+    usando mocks para las dependencias.
+  - Integración: verificarían la interacción real entre el controlador,
+    LibroService y la base de datos con un DbContext de prueba.
+  - Extremo a extremo: verificarían flujos completos desde el navegador,
+    como iniciar sesión, consultar el catálogo y registrar un libro.
+
+
+EJECUCIÓN DE PRUEBAS
+================================================================================
+
+En Visual Studio:
+  1. Abrir la solución BibliotecaMVC.sln.
+  2. Compilar la solución (Ctrl+Shift+B).
+  3. Abrir el Explorador de pruebas (Test > Test Explorer).
+  4. Ejecutar todas las pruebas (Ctrl+R, A).
+
+Por línea de comandos:
+  dotnet test BibliotecaWeb.Tests
+
+
+ARCHIVOS NUEVOS O MODIFICADOS
+================================================================================
+  BibliotecaMVC.sln                          - Solución con ambos proyectos
+  BibliotecaWeb.Tests/BibliotecaWeb.Tests.csproj  - Proyecto de pruebas
+  BibliotecaWeb.Tests/EntornoTests.cs        - Prueba de verificación
+  BibliotecaWeb.Tests/LibroModelTests.cs     - Pruebas del modelo
+  BibliotecaWeb.Tests/LibroServiceTests.cs   - Pruebas del controlador
+  BibliotecaWeb/Services/ILibroService.cs    - Interfaz del servicio
+  BibliotecaWeb/Services/LibroService.cs     - Implementación del servicio
+  BibliotecaWeb/Controllers/LibrosController.cs - Actualizado para usar ILibroService
+  BibliotecaWeb/Program.cs                   - Registro de ILibroService en DI

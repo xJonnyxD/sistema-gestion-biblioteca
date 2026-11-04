@@ -1,5 +1,5 @@
-using BibliotecaWeb.Data;
 using BibliotecaWeb.Models;
+using BibliotecaWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +11,13 @@ public class LibrosController : Controller
     private const string ImagenPorDefecto = "sin-imagen.svg";
     private static readonly string[] ExtensionesPermitidas = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
 
-    private readonly ApplicationDbContext _context;
+    private readonly ILibroService _libroService;
     private readonly IWebHostEnvironment _entorno;
     private readonly ILogger<LibrosController> _logger;
 
-    public LibrosController(ApplicationDbContext context, IWebHostEnvironment entorno, ILogger<LibrosController> logger)
+    public LibrosController(ILibroService libroService, IWebHostEnvironment entorno, ILogger<LibrosController> logger)
     {
-        _context = context;
+        _libroService = libroService;
         _entorno = entorno;
         _logger = logger;
     }
@@ -26,20 +26,9 @@ public class LibrosController : Controller
     {
         _logger.LogInformation("Consultando listado de libros. Término de búsqueda: {Buscar}", buscar ?? "(ninguno)");
 
-        var consulta = _context.Libros.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(buscar))
-        {
-            var termino = buscar.Trim();
-            consulta = consulta.Where(l =>
-                l.Titulo.Contains(termino) ||
-                l.Autor.Contains(termino) ||
-                l.Categoria.Contains(termino));
-        }
-
-        var libros = consulta
-            .OrderBy(l => l.Titulo)
-            .ToList();
+        var libros = string.IsNullOrWhiteSpace(buscar)
+            ? _libroService.ObtenerTodos()
+            : _libroService.Buscar(buscar);
 
         _logger.LogInformation("Se encontraron {Cantidad} libro(s) en la consulta.", libros.Count);
 
@@ -51,7 +40,7 @@ public class LibrosController : Controller
     {
         _logger.LogInformation("Consultando detalle del libro con Id {LibroId}.", id);
 
-        var libro = _context.Libros.Find(id);
+        var libro = _libroService.ObtenerPorId(id);
         if (libro is null)
         {
             _logger.LogWarning("No se encontró el libro con Id {LibroId}.", id);
@@ -87,8 +76,7 @@ public class LibrosController : Controller
         {
             libro.ImagenNombre = GuardarImagen(imagen) ?? ImagenPorDefecto;
 
-            _context.Libros.Add(libro);
-            _context.SaveChanges();
+            _libroService.Crear(libro);
 
             _logger.LogInformation("Libro «{Titulo}» creado exitosamente con Id {LibroId}.", libro.Titulo, libro.Id);
             TempData["Exito"] = $"El libro «{libro.Titulo}» se agregó correctamente.";
@@ -108,7 +96,7 @@ public class LibrosController : Controller
     {
         _logger.LogInformation("Accediendo al formulario de edición del libro con Id {LibroId}.", id);
 
-        var libro = _context.Libros.Find(id);
+        var libro = _libroService.ObtenerPorId(id);
         if (libro is null)
         {
             _logger.LogWarning("No se encontró el libro con Id {LibroId} para editar.", id);
@@ -131,33 +119,17 @@ public class LibrosController : Controller
             return View(libro);
         }
 
-        var libroActual = _context.Libros.Find(libro.Id);
-        if (libroActual is null)
-        {
-            _logger.LogWarning("No se encontró el libro con Id {LibroId} en la base de datos al editar.", libro.Id);
-            return NotFound();
-        }
-
         try
         {
-            libroActual.Titulo = libro.Titulo;
-            libroActual.Autor = libro.Autor;
-            libroActual.Categoria = libro.Categoria;
-            libroActual.AnioPublicacion = libro.AnioPublicacion;
-            libroActual.Disponibles = libro.Disponibles;
-            libroActual.Descripcion = libro.Descripcion;
-
-            var nuevaImagen = GuardarImagen(imagen);
-            if (nuevaImagen is not null)
+            var actualizado = _libroService.Actualizar(libro);
+            if (!actualizado)
             {
-                libroActual.ImagenNombre = nuevaImagen;
+                _logger.LogWarning("No se encontró el libro con Id {LibroId} en la base de datos al editar.", libro.Id);
+                return NotFound();
             }
 
-            _context.Libros.Update(libroActual);
-            _context.SaveChanges();
-
-            _logger.LogInformation("Libro «{Titulo}» (Id: {LibroId}) actualizado exitosamente.", libroActual.Titulo, libroActual.Id);
-            TempData["Exito"] = $"El libro «{libroActual.Titulo}» se actualizó correctamente.";
+            _logger.LogInformation("Libro «{Titulo}» (Id: {LibroId}) actualizado exitosamente.", libro.Titulo, libro.Id);
+            TempData["Exito"] = $"El libro «{libro.Titulo}» se actualizó correctamente.";
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -174,7 +146,7 @@ public class LibrosController : Controller
     {
         _logger.LogInformation("Accediendo a confirmación de eliminación del libro con Id {LibroId}.", id);
 
-        var libro = _context.Libros.Find(id);
+        var libro = _libroService.ObtenerPorId(id);
         if (libro is null)
         {
             _logger.LogWarning("No se encontró el libro con Id {LibroId} para eliminar.", id);
@@ -191,23 +163,21 @@ public class LibrosController : Controller
     {
         _logger.LogInformation("Iniciando eliminación del libro con Id {LibroId}.", id);
 
-        var libro = _context.Libros.Find(id);
-        if (libro is null)
-        {
-            _logger.LogWarning("No se encontró el libro con Id {LibroId} al confirmar eliminación.", id);
-            return RedirectToAction(nameof(Index));
-        }
-
         try
         {
-            _context.Libros.Remove(libro);
-            _context.SaveChanges();
-            _logger.LogInformation("Libro «{Titulo}» (Id: {LibroId}) eliminado exitosamente.", libro.Titulo, libro.Id);
-            TempData["Exito"] = $"El libro «{libro.Titulo}» se eliminó correctamente.";
+            var eliminado = _libroService.Eliminar(id);
+            if (!eliminado)
+            {
+                _logger.LogWarning("No se encontró el libro con Id {LibroId} al confirmar eliminación.", id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            _logger.LogInformation("Libro con Id {LibroId} eliminado exitosamente.", id);
+            TempData["Exito"] = "El libro se eliminó correctamente.";
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al eliminar el libro «{Titulo}» (Id: {LibroId}).", libro.Titulo, libro.Id);
+            _logger.LogError(ex, "Error al eliminar el libro con Id {LibroId}.", id);
             TempData["Error"] = "Ocurrió un error al eliminar el libro. Intente nuevamente.";
         }
 
