@@ -5,11 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaWeb.Data;
 
-/// <summary>
-/// Contexto de Entity Framework Core. Hereda de IdentityDbContext para integrar
-/// ASP.NET Core Identity (usuarios, roles y demás tablas de autenticación) junto
-/// con las entidades propias del dominio, expuestas a través de sus DbSet.
-/// </summary>
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -17,18 +12,12 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
     }
 
-    /// <summary>
-    /// Tabla de libros. Cada elemento del DbSet se corresponde con una fila de la
-    /// tabla Libros en la base de datos.
-    /// </summary>
     public DbSet<Libro> Libros => Set<Libro>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Datos iniciales (seed): se insertan al aplicar la migración, de modo que
-        // la tabla Libros no quede vacía la primera vez que se ejecuta la aplicación.
         modelBuilder.Entity<Libro>().HasData(
             new Libro { Id = 1, Titulo = "Cien años de soledad", Autor = "Gabriel García Márquez", Categoria = "Novela", AnioPublicacion = 1967, Disponibles = 3, Descripcion = "La saga de la familia Buendía en el pueblo de Macondo, obra cumbre del realismo mágico.", ImagenNombre = "cien-anios-de-soledad.jpg" },
             new Libro { Id = 2, Titulo = "La casa de los espíritus", Autor = "Isabel Allende", Categoria = "Novela", AnioPublicacion = 1982, Disponibles = 2, Descripcion = "Tres generaciones de la familia Trueba en un país latinoamericano marcado por el cambio.", ImagenNombre = "la-casa-de-los-espiritus.jpg" },

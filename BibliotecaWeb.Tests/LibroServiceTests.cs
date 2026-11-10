@@ -33,10 +33,6 @@ public class LibrosControllerTests
             Mock.Of<ITempDataProvider>());
     }
 
-    // ========================================================================
-    // INDEX - Consulta de libros
-    // ========================================================================
-
     [Fact]
     public void Index_SinBusqueda_DevuelveVistaConTodosLosLibros()
     {
@@ -84,10 +80,6 @@ public class LibrosControllerTests
         Assert.Empty(modelo);
     }
 
-    // ========================================================================
-    // DETALLE - Consulta individual
-    // ========================================================================
-
     [Fact]
     public void Detalle_LibroExiste_DevuelveVistaConLibro()
     {
@@ -110,10 +102,6 @@ public class LibrosControllerTests
 
         Assert.IsType<NotFoundResult>(resultado);
     }
-
-    // ========================================================================
-    // CREAR - Registro de libros
-    // ========================================================================
 
     [Fact]
     public void CrearGet_DevuelveVistaConLibroNuevo()
@@ -175,10 +163,6 @@ public class LibrosControllerTests
         Assert.Equal("Ocurrió un error al guardar el libro. Intente nuevamente.",
             _controller.TempData["Error"]);
     }
-
-    // ========================================================================
-    // EDITAR - Actualización de libros
-    // ========================================================================
 
     [Fact]
     public void EditarGet_LibroExiste_DevuelveVistaConLibro()
@@ -247,10 +231,6 @@ public class LibrosControllerTests
         _mockService.Verify(s => s.Actualizar(It.IsAny<Libro>()), Times.Never);
     }
 
-    // ========================================================================
-    // ELIMINAR - Eliminación de libros
-    // ========================================================================
-
     [Fact]
     public void EliminarGet_LibroExiste_DevuelveVistaConLibro()
     {
@@ -308,10 +288,6 @@ public class LibrosControllerTests
         Assert.Equal("Ocurrió un error al eliminar el libro. Intente nuevamente.",
             _controller.TempData["Error"]);
     }
-
-    // ========================================================================
-    // ESCENARIOS CON [Theory] - Diferentes datos de entrada
-    // ========================================================================
 
     [Theory]
     [InlineData(1)]

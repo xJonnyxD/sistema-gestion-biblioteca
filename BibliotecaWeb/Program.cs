@@ -11,14 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Entity Framework Core: registra el ApplicationDbContext y lo configura para
-// comunicarse con SQL Server usando la cadena de conexión "BibliotecaDB".
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BibliotecaDB")));
 
-// ASP.NET Core Identity: gestión de usuarios (IdentityUser) almacenados con
-// Entity Framework Core en el ApplicationDbContext. Habilita UserManager y
-// SignInManager para el registro, inicio y cierre de sesión.
 builder.Services
     .AddIdentity<IdentityUser, IdentityRole>(options =>
     {
@@ -30,7 +25,6 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Rutas de las páginas de autenticación (cookie de sesión).
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -38,14 +32,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccesoDenegado";
 });
 
-// Inyección de Dependencias: se asocia la abstracción IAutorService con su
-// implementación AutorService, usando el ciclo de vida Scoped (una instancia por petición).
 builder.Services.AddScoped<IAutorService, AutorService>();
 builder.Services.AddScoped<ILibroService, LibroService>();
-
-// Reto (SOLID / IoC / DI): para usar la segunda implementación basta con cambiar
-// la línea anterior por la siguiente. El AutoresController no requiere modificación.
-// builder.Services.AddScoped<IAutorService, AutorServiceDemo>();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -56,10 +44,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
-// Aplica las migraciones pendientes al iniciar. En un contenedor recién levantado
-// esto crea la base de datos, su esquema y los datos iniciales sin intervención
-// manual. Se reintenta porque el servidor SQL del contenedor puede tardar en aceptar
-// conexiones cuando ambos servicios arrancan a la vez.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -125,8 +109,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Sirve los archivos subidos en tiempo de ejecución (portadas en wwwroot/images);
-// MapStaticAssets solo entrega los archivos conocidos al compilar.
 app.UseStaticFiles();
 
 app.UseRouting();

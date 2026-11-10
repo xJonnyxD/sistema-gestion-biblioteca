@@ -4,11 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaWeb.Controllers;
 
-/// <summary>
-/// Gestiona la autenticación de usuarios (registro, inicio y cierre de sesión)
-/// mediante ASP.NET Core Identity: UserManager crea y consulta usuarios y
-/// SignInManager valida credenciales y administra la sesión.
-/// </summary>
 public class AccountController : Controller
 {
     private readonly UserManager<IdentityUser> _userManager;
@@ -19,8 +14,6 @@ public class AccountController : Controller
         _userManager = userManager;
         _signInManager = signInManager;
     }
-
-    // REGISTRO ---------------------------------------------------------------
 
     [HttpGet]
     public IActionResult Register()
@@ -47,8 +40,6 @@ public class AccountController : Controller
         if (resultado.Succeeded)
         {
             await _userManager.AddToRoleAsync(usuario, "Lector");
-
-            // Inicia sesión automáticamente tras un registro correcto.
             await _signInManager.SignInAsync(usuario, isPersistent: false);
             TempData["Exito"] = $"¡Bienvenido, {usuario.UserName}! Tu cuenta se creó correctamente.";
             return RedirectToAction("Index", "Home");
@@ -61,8 +52,6 @@ public class AccountController : Controller
 
         return View(modelo);
     }
-
-    // LOGIN ------------------------------------------------------------------
 
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
@@ -82,8 +71,6 @@ public class AccountController : Controller
             return View(modelo);
         }
 
-        // Permite ingresar con usuario o con correo: si el dato contiene "@" se
-        // busca por correo; en cualquier caso se resuelve el nombre de usuario.
         var entrada = modelo.UsuarioOCorreo.Trim();
         var usuario = entrada.Contains('@')
             ? await _userManager.FindByEmailAsync(entrada)
@@ -91,7 +78,6 @@ public class AccountController : Controller
 
         if (usuario is not null)
         {
-            // SignInManager valida las credenciales y crea la cookie de sesión.
             var resultado = await _signInManager.PasswordSignInAsync(
                 usuario.UserName!, modelo.Password, modelo.Recordarme, lockoutOnFailure: false);
 
@@ -106,24 +92,18 @@ public class AccountController : Controller
             }
         }
 
-        // Mensaje único para credenciales inválidas (no revela si el usuario existe).
         ModelState.AddModelError(string.Empty, "Usuario o contraseña incorrectos.");
         return View(modelo);
     }
-
-    // CERRAR SESIÓN ----------------------------------------------------------
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        // SignInManager elimina la cookie de sesión del usuario.
         await _signInManager.SignOutAsync();
         TempData["Exito"] = "Sesión cerrada correctamente.";
         return RedirectToAction("Index", "Home");
     }
-
-    // ACCESO DENEGADO -------------------------------------------------------
 
     [HttpGet]
     public IActionResult AccesoDenegado()

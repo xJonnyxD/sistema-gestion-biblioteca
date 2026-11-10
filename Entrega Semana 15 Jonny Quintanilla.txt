@@ -1,5 +1,5 @@
 ================================================================================
-  PROGRAMACIÓN WEB II - SEMANA 15
+  PROGRAMACION WEB II - SEMANA 15
   Logging y Manejo de Errores - BibliotecaMVC
   Jonny Quintanilla | 28 de octubre de 2026
   Repositorio: https://github.com/xJonnyxD/sistema-gestion-biblioteca (main)
@@ -12,9 +12,9 @@ ACTIVIDAD 1: LOGGING EN CONTROLADORES
 1. LibrosController
    - Se inyectó ILogger<LibrosController> en el constructor.
    - LogInformation en Index, Detalle, Crear, Editar, Eliminar
-     (registra inicio y resultado de cada operación).
+     (registra inicio y resultado de cada operacion).
    - LogWarning cuando un libro no se encuentra por Id y cuando
-     el ModelState es inválido.
+     el ModelState es invalido.
    - LogError en bloques try-catch de Crear, Editar y EliminarConfirmado.
 
 2. CategoriasController
@@ -34,8 +34,8 @@ ACTIVIDAD 1: LOGGING EN CONTROLADORES
 ACTIVIDAD 2: MANEJO DE ERRORES Y AUTORIZACIÓN
 ================================================================================
 
-1. Página de error (Views/Shared/Error.cshtml)
-   - Muestra mensaje genérico con RequestId de referencia.
+1. Pagina de error (Views/Shared/Error.cshtml)
+   - Muestra mensaje generico con RequestId de referencia.
    - No expone stack traces ni información interna.
 
 2. Middleware
@@ -48,14 +48,14 @@ ACTIVIDAD 2: MANEJO DE ERRORES Y AUTORIZACIÓN
 
 4. CRUD
    - Libros: Index, Detalle, Crear, Editar, Eliminar (EF Core + SQL Server).
-   - Categorías: Index, Detalle, Crear, Editar, Eliminar (datos en memoria).
+   - Categorias: Index, Detalle, Crear, Editar, Eliminar (datos en memoria).
    - Todas las acciones POST protegidas con [ValidateAntiForgeryToken].
 
-5. Autorización por roles
+5. Autorizacion por roles
    - Roles: Administrador (CRUD completo) y Lector (solo lectura).
    - [Authorize(Roles = "Administrador")] en acciones de escritura.
    - Vistas ocultan botones de Crear/Editar/Eliminar según el rol.
-   - Menú de navegación muestra Usuarios y Préstamos solo para Administrador.
+   - Menu de navegacion muestra Usuarios y Préstamos solo para Administrador.
 
 6. Autenticación Identity
    - Registro, Login y Logout funcionan correctamente.
@@ -77,4 +77,4 @@ ARCHIVOS MODIFICADOS
   Views/Categorias/Editar.cshtml       - Nueva vista
   Views/Categorias/Eliminar.cshtml     - Nueva vista
   Views/Shared/_MenuPrincipal.cshtml   - Roles corregidos
-  Views/Account/AccesoDenegado.cshtml  - Mensaje genérico
+  Views/Account/AccesoDenegado.cshtml  - Mensaje generico

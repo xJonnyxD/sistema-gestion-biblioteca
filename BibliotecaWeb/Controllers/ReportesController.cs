@@ -31,10 +31,6 @@ public class ReportesController : Controller
         return View();
     }
 
-    // ========================================================================
-    // PDF - QuestPDF
-    // ========================================================================
-
     public IActionResult GenerarPDF(string? categoria)
     {
         var libros = ObtenerLibros(categoria);
@@ -154,10 +150,6 @@ public class ReportesController : Controller
         var pdf = documento.GeneratePdf();
         return File(pdf, "application/pdf", "ReporteLibros.pdf");
     }
-
-    // ========================================================================
-    // EXCEL - ClosedXML
-    // ========================================================================
 
     public IActionResult ExportarExcel(string? categoria)
     {

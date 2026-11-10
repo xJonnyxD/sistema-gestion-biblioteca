@@ -2,11 +2,6 @@ using BibliotecaWeb.Models;
 
 namespace BibliotecaWeb.Services;
 
-/// <summary>
-/// Implementación de <see cref="IAutorService"/>. Contiene la lógica de gestión y
-/// consulta de los autores. Los datos se mantienen en una lista en memoria
-/// (compartida entre peticiones) mientras la aplicación está en ejecución.
-/// </summary>
 public class AutorService : IAutorService
 {
     private static readonly List<Autor> _autores = new()

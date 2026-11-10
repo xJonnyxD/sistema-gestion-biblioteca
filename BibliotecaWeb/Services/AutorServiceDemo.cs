@@ -2,12 +2,6 @@ using BibliotecaWeb.Models;
 
 namespace BibliotecaWeb.Services;
 
-/// <summary>
-/// Segunda implementación de <see cref="IAutorService"/> (modo demostración) con un
-/// conjunto de autores diferente. Sirve para comprobar la Inversión de Control:
-/// basta con cambiar el registro en Program.cs para que el controlador use esta
-/// implementación, sin modificar el AutoresController.
-/// </summary>
 public class AutorServiceDemo : IAutorService
 {
     private static readonly List<Autor> _autores = new()

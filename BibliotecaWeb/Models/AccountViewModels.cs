@@ -2,10 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaWeb.Models;
 
-/// <summary>
-/// Datos del formulario de inicio de sesión. El usuario puede ingresar con su
-/// nombre de usuario o su correo electrónico.
-/// </summary>
 public class LoginViewModel
 {
     [Required(ErrorMessage = "Ingrese su usuario o correo.")]
@@ -21,9 +17,6 @@ public class LoginViewModel
     public bool Recordarme { get; set; }
 }
 
-/// <summary>
-/// Datos del formulario de registro de un nuevo usuario.
-/// </summary>
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "El usuario es obligatorio.")]
