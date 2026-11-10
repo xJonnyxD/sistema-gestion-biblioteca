@@ -1,0 +1,116 @@
+================================================================================
+  PROGRAMACIÓN WEB II - SEMANA 17
+  Generación de Reportes PDF y Excel - BibliotecaMVC
+  Jonny Quintanilla | 10 de noviembre de 2026
+  Repositorio: https://github.com/xJonnyxD/sistema-gestion-biblioteca (main)
+================================================================================
+
+
+ACTIVIDAD 1: PREPARACIÓN DEL ENTORNO - QUESTPDF
+================================================================================
+
+Paquete instalado: QuestPDF 2025.3.2 (via NuGet en BibliotecaWeb.csproj)
+Licencia configurada en Program.cs:
+  QuestPDF.Settings.License = LicenseType.Community;
+
+QuestPDF es una librería de código abierto para generar documentos PDF
+en .NET mediante una API fluida (Fluent API). Permite definir la estructura
+del documento con componentes como Page, Header, Content, Footer y Table
+sin depender de plantillas HTML.
+
+
+ACTIVIDAD 2 Y 3: REPORTE PDF DE LIBROS
+================================================================================
+
+Controlador: ReportesController.cs
+Acción: GenerarPDF(string? categoria)
+
+Funcionalidad:
+  - Consulta los libros de la BD con Entity Framework Core.
+  - Acepta filtro opcional por categoría.
+  - Genera un PDF con QuestPDF que incluye:
+    * Encabezado: nombre del sistema, título del reporte, categoría y fecha.
+    * Tabla: ID, Título, Autor, Categoría, Año, Disponibles.
+    * Filas alternadas con colores para facilitar la lectura.
+    * Resumen: total de libros y total de ejemplares disponibles.
+    * Pie de página: numeración "Página X de Y".
+  - Devuelve el archivo como "ReporteLibros.pdf" (application/pdf).
+
+
+ACTIVIDAD 4: INVESTIGACIÓN Y CONFIGURACIÓN DE CLOSEDXML
+================================================================================
+
+Paquete instalado: ClosedXML 0.104.2 (via NuGet en BibliotecaWeb.csproj)
+
+ClosedXML es una librería de código abierto para crear y manipular archivos
+Excel (.xlsx) en .NET sin necesidad de tener Microsoft Excel instalado.
+Permite crear libros de trabajo (XLWorkbook), agregar hojas, escribir datos
+en celdas, aplicar formatos (negrita, colores, bordes, alineación) y ajustar
+automáticamente el ancho de las columnas.
+
+
+ACTIVIDAD 5: EXPORTACIÓN A EXCEL
+================================================================================
+
+Acción: ExportarExcel(string? categoria)
+
+Funcionalidad:
+  - Consulta los libros de la BD con Entity Framework Core.
+  - Acepta filtro opcional por categoría.
+  - Crea un XLWorkbook con la hoja "Reporte de Libros" que incluye:
+    * Encabezado: título del sistema (celdas combinadas, fondo azul oscuro).
+    * Filtro aplicado y fecha de generación.
+    * Tabla: ID, Título, Autor, Categoría, Año, Disponibles.
+    * Encabezados con fondo azul oscuro, texto blanco y negrita.
+    * Filas alternadas con fondo gris claro.
+    * Bordes en todas las celdas de datos.
+    * Columnas de Año y Disponibles centradas.
+    * Resumen: total de libros y total disponibles.
+    * Ajuste automático del ancho de columnas.
+  - Devuelve el archivo como "ReporteLibros.xlsx".
+
+
+ACTIVIDAD 6 (RETO): PERSONALIZACIÓN Y MEJORAS
+================================================================================
+
+  - Filtro por categoría: el dropdown carga las categorías existentes
+    desde la BD y filtra ambos reportes (PDF y Excel).
+  - Resumen con totales: ambos documentos incluyen el total de libros
+    y la suma de ejemplares disponibles.
+  - Colores y estilos: encabezados azul oscuro con texto blanco, filas
+    alternadas, bordes y tipografía consistente.
+  - Vista de reportes: tarjetas informativas que describen cada librería.
+
+
+VISTA DE REPORTES
+================================================================================
+
+Ubicación: Views/Reportes/Index.cshtml
+
+  - Dropdown para seleccionar categoría (cargado desde la BD).
+  - Botón "Generar reporte PDF" (rojo).
+  - Botón "Exportar a Excel" (verde).
+  - Al cambiar la categoría, los enlaces se actualizan con JavaScript.
+  - Enlace "Reportes" agregado al menú de navegación.
+
+
+ARCHIVOS NUEVOS O MODIFICADOS
+================================================================================
+  BibliotecaWeb.csproj                      - QuestPDF y ClosedXML agregados
+  Program.cs                                - Licencia QuestPDF Community
+  Controllers/ReportesController.cs         - Acciones GenerarPDF y ExportarExcel
+  Views/Reportes/Index.cshtml               - Vista con filtro y botones
+  Views/Shared/_MenuPrincipal.cshtml        - Enlace a Reportes en el menú
+
+
+PASOS DE VERIFICACIÓN
+================================================================================
+  1. Abrir la solución en Visual Studio y compilar.
+  2. Ejecutar la aplicación e iniciar sesión.
+  3. Ir a Reportes desde el menú de navegación.
+  4. Hacer clic en "Generar reporte PDF" → se descarga ReporteLibros.pdf.
+  5. Abrir el PDF y verificar encabezado, tabla, resumen y pie de página.
+  6. Hacer clic en "Exportar a Excel" → se descarga ReporteLibros.xlsx.
+  7. Abrir el Excel y verificar formatos, colores, bordes y datos.
+  8. Seleccionar una categoría y repetir ambas descargas.
+  9. Verificar que los datos filtrados coincidan con la BD.

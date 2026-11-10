@@ -1,0 +1,85 @@
+@{
+    ViewData["Title"] = "Reportes";
+    var categorias = ViewBag.Categorias as List<string> ?? new List<string>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-1">Reportes</h1>
+        <p class="text-muted mb-0">Genere reportes del catálogo de libros en formato PDF o Excel.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Filtrar por categoría</h5>
+
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select id="categoria" class="form-select">
+                    <option value="">Todas las categorías</option>
+                    @foreach (var cat in categorias)
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-8">
+                <div class="d-flex gap-2">
+                    <a id="btnPdf" asp-action="GenerarPDF" class="btn btn-danger">
+                        <i class="bi bi-file-earmark-pdf"></i> Generar reporte PDF
+                    </a>
+                    <a id="btnExcel" asp-action="ExportarExcel" class="btn btn-success">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar a Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h5 class="card-title text-danger">QuestPDF</h5>
+                <p class="card-text">
+                    Genera un documento PDF con el listado de libros, incluyendo encabezado
+                    con el nombre del sistema, tabla con los datos principales, resumen con
+                    totales y pie de página con numeración.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title text-success">ClosedXML</h5>
+                <p class="card-text">
+                    Genera un archivo Excel (.xlsx) con una hoja de trabajo que contiene
+                    los datos de los libros con formatos, colores, bordes y ajuste automático
+                    de columnas.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('categoria').addEventListener('change', function () {
+            var cat = this.value;
+            var pdfLink = document.getElementById('btnPdf');
+            var excelLink = document.getElementById('btnExcel');
+
+            var pdfBase = '@Url.Action("GenerarPDF", "Reportes")';
+            var excelBase = '@Url.Action("ExportarExcel", "Reportes")';
+
+            var param = cat ? '?categoria=' + encodeURIComponent(cat) : '';
+            pdfLink.href = pdfBase + param;
+            excelLink.href = excelBase + param;
+        });
+    </script>
+}
